@@ -14,7 +14,7 @@ public class CustomUserDetailsService implements UserDetailsService {
    * 우리가 구현한 UserDetailsService는 DB나 다른 저장소에서 사용자 정보를 조회합니다.
    * 조회된 정보(UserDetails)에는 username, password, 권한(roles)이 들어있습니다.
    * 시큐리티가 이 정보를 가져와서 패스워드 확인 + 권한 체크를 수행합니다.
-   * 즉, 로그인 검증 로직의 핵심 역할을 합니다.
+   * 즉, 로그인 검증 로직의 핵심 역할을 합니다.  
    */
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
