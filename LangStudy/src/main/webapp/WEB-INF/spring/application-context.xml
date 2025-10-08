@@ -19,8 +19,8 @@
         http://www.springframework.org/schema/security/spring-security.xsd">
 
     <!-- Component Scan (Service, Repository, Component), kr.co 로 해줘야 하위 패키지를 모두 스캔해서bean등록한다. -->
-    <context:component-scan base-package="kr.co"> 
-        <!-- Controller는 servlet-context.xml에서 스캔 -->
+    <context:component-scan base-package="kr.co.langStudy"> 
+        <!-- Controller는 웹요청처리 전용이므로 servlet-context.xml에서 스캔 -->
         <context:exclude-filter type="annotation" 
             expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>

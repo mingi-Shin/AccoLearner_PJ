@@ -6,12 +6,6 @@
          http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
          
-  <display-name>LangStudy</display-name>
-  <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
-  </welcome-file-list>
-  
 	<!-- 인코딩 필터 (한글 처리 - 제일 먼저 적용) -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>
@@ -55,18 +49,18 @@
 
 	<!-- DispatcherServlet (Spring MVC) -->
 	<servlet>
-  	<servlet-name>dispatcher</servlet-name>
-  		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	 	<servlet-name>dispatcher</servlet-name>
+	 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 	    <init-param>
-      	<param-name>contextConfigLocation</param-name>
-      	<param-value>/WEB-INF/spring/servlet-context.xml</param-value>
+	     	<param-name>contextConfigLocation</param-name>
+	     	<param-value>/WEB-INF/spring/servlet-context.xml</param-value>
 	    </init-param>
 	    <load-on-startup>1</load-on-startup>
 	    <multipart-config>
-   			<!-- 파일 업로드 설정 -->
-        <max-file-size>20971520</max-file-size> <!-- 20MB -->
-        <max-request-size>41943040</max-request-size> <!-- 40MB -->
-        <file-size-threshold>0</file-size-threshold>
+	  			<!-- 파일 업로드 설정 -->
+	       <max-file-size>20971520</max-file-size> <!-- 20MB -->
+	       <max-request-size>41943040</max-request-size> <!-- 40MB -->
+	       <file-size-threshold>0</file-size-threshold>
 	    </multipart-config>
 	</servlet>
   <servlet-mapping>
