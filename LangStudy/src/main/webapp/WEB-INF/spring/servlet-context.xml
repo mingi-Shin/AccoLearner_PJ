@@ -27,4 +27,7 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
+	<!-- Spring MVC의 어노테이션 기반 요청 처리 기능을 활성화 -->
+	<mvc:annotation-driven />
+	
 </beans>
