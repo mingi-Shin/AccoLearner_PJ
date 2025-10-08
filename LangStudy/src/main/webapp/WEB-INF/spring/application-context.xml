@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DB, MyBatis, 트랜잭션, 서비스 빈 : Root Context -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+    xmlns:security="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context 
+        https://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx 
+        https://www.springframework.org/schema/tx/spring-tx.xsd
+        http://mybatis.org/schema/mybatis-spring 
+        https://mybatis.org/schema/mybatis-spring.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!-- Component Scan (Service, Repository, Component), kr.co 로 해줘야 하위 패키지를 모두 스캔해서bean등록한다. -->
+    <context:component-scan base-package="kr.co"> 
+        <!-- Controller는 servlet-context.xml에서 스캔 -->
+        <context:exclude-filter type="annotation" 
+            expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- Properties 파일 로드 (classpath = src/main/resources ) -->
+    <context:property-placeholder location="classpath:jdbc.properties"  
+        ignore-unresolvable="true"/>
+
+    <!-- DataSource 설정 (HikariCP) -->
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <property name="driverClassName" value="${db.driver}"/>
+        <property name="jdbcUrl" value="${db.url}"/>
+        <property name="username" value="${db.username}"/>
+        <property name="password" value="${db.password}"/>
+        <property name="maximumPoolSize" value="${db.maxPoolSize}"/>
+        <property name="minimumIdle" value="${db.minIdle}"/>
+        <property name="connectionTimeout" value="${db.connectionTimeout}"/>
+        <property name="idleTimeout" value="${db.idleTimeout}"/>
+        <property name="maxLifetime" value="${db.maxLifetime}"/>
+    </bean>
+
+    <!-- MyBatis 설정 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+         <!-- 아래 파일에 MyBatis 전역 설정이 있음 -->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="mapperLocations" value="classpath:mappers/**/*Mapper.xml"/>
+    </bean>
+
+    <!-- SqlSessionTemplate -->
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sqlSessionFactory"/>
+    </bean>
+
+    <!-- Mapper 인터페이스 자동 스캔 -->
+    <mybatis-spring:scan base-package="kr.co.langstudy.**.mapper"/>
+
+    <!-- 트랜잭션 매니저 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- Transaction Annotation 활성화 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- PasswordEncoder (BCrypt) -->
+    <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+        <constructor-arg name="strength" value="10"/>
+    </bean>
+
+    <!-- AuthenticationManager -->
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="customUserDetailsService">
+            <security:password-encoder ref="passwordEncoder"/>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+    <!-- 파일 업로드 설정 (MultipartResolver) -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"/>
+
+    <!-- 스케줄러 활성화 (필요시) -->
+    <!-- <task:annotation-driven/> -->
+
+</beans>
