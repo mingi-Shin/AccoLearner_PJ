@@ -1,2 +1,2 @@
-# LangStudy_PJ
+# AccoLearner_PJ
 개인 프로젝트
