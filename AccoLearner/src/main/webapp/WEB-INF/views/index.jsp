@@ -15,7 +15,8 @@
 
 <div class="container">
 	<jsp:include page="/WEB-INF/views/common/header.jsp" />
-	<h1>안녕하세요?</h1>
+	
+	<jsp:include page="/WEB-INF/views/common/bottom.jsp" />
 </div>
 
 </body>
