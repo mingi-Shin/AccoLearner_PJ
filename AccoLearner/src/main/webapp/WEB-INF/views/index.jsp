@@ -12,9 +12,9 @@
 <title>Main 페이지입니다.</title>
 </head>
 <body>
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <div class="container">
-	<jsp:include page="/WEB-INF/views/common/header.jsp" />
 	
 	<jsp:include page="/WEB-INF/views/common/bottom.jsp" />
 </div>

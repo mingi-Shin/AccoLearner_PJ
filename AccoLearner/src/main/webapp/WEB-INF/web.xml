@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DispatcherServlet, ContextLoaderListener, 필터, 세션, 에러페이지 등을 정의 -->
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+                             http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+	<!-- 인코딩 필터 (한글 처리 - 제일 먼저 적용) -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+	    <param-name>encoding</param-name>
+	    <param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+	    <param-name>forceEncoding</param-name>
+	    <param-value>true</param-value>
+		</init-param>
+	</filter>
+  <filter-mapping>
+  	<filter-name>encodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <!-- Spring Security Filter -->
+  <filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <!-- Root Application Context (비즈니스 로직, DB, Security) -->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/spring/root-context.xml</param-value>
+  </context-param>
+
+  <!-- ContextLoaderListener (Root Context 로딩) -->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+	<!-- DispatcherServlet (Spring MVC) -->
+	<servlet>
+	 	<servlet-name>dispatcher</servlet-name>
+	 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	    <init-param>
+	     	<param-name>contextConfigLocation</param-name>
+	     	<param-value>/WEB-INF/spring/servlet-context.xml</param-value>
+	    </init-param>
+	    <load-on-startup>1</load-on-startup>
+	    <multipart-config>
+	  			<!-- 파일 업로드 설정 -->
+	       <max-file-size>20971520</max-file-size> <!-- 20MB -->
+	       <max-request-size>41943040</max-request-size> <!-- 40MB -->
+	       <file-size-threshold>0</file-size-threshold>
+	    </multipart-config>
+	</servlet>
+	
+  <servlet-mapping>
+	 	<servlet-name>dispatcher</servlet-name>
+		<url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+  <!-- Session Timeout (분 단위) -->
+  <session-config>
+  	<session-timeout>30</session-timeout>
+  </session-config>
+
+	<!-- 에러 페이지 설정 -->
+	<error-page>
+ 		<error-code>404</error-code>
+    <location>/WEB-INF/views/error/404.jsp</location>
+	</error-page>
+	<error-page>
+  	<error-code>500</error-code>
+    <location>/WEB-INF/views/error/500.jsp</location>
+	</error-page>
+	
+</web-app>
