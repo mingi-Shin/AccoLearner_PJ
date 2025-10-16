@@ -52,7 +52,10 @@
 	  <commons-lang3.version>3.13.0</commons-lang3.version>
 	  <commons-io.version>2.15.0</commons-io.version>
 	  <commons-fileupload.version>1.5</commons-fileupload.version>
+	  
   </properties>
+  
+  
   
   <dependencies>
   	<!-- Spring Framework Core -->
@@ -236,6 +239,27 @@
       <version>4.13.2</version>
       <scope>test</scope>
 	  </dependency>
+	  
+	  <!-- JWT -->
+		<dependency>
+	  	<groupId>io.jsonwebtoken</groupId>
+	  	<artifactId>jjwt-api</artifactId>
+	  	<version>0.12.6</version>
+		</dependency>
+		<dependency>
+	  	<groupId>io.jsonwebtoken</groupId>
+	  	<artifactId>jjwt-impl</artifactId>
+	  	<version>0.12.6</version>
+	  	<scope>runtime</scope>
+		</dependency>
+		<dependency>
+	  	<groupId>io.jsonwebtoken</groupId>
+	  	<artifactId>jjwt-jackson</artifactId>
+	  	<version>0.12.6</version>
+	  	<scope>runtime</scope>
+		</dependency>
+	  
+	  
   </dependencies>
   
   

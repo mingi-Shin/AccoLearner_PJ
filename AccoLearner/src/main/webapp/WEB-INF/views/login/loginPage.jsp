@@ -10,24 +10,66 @@
 <head>
 <meta charset="UTF-8">
 <title>로그인 페이지</title>
-</head>
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function(){
 		
 		//예외처리
 	
 		//로그인 post 비동기 처리 	
-	
-		
-		const errorDiv = document.getElementById("login-error");
-		errorDiv.style.display='block';
-		
+		loginProcess();
 		
 	});
+	
+	function loginProcess() { 
+		document.getElementById("login-process-btn").addEventListener("click", async () => {
+		  const username = document.getElementById("login-id").value.trim();
+		  const password = document.getElementById("login-pwd").value.trim();
+		  const errorDiv = document.getElementById("login-error");
+		  
+		  if(!username||!password){
+			  errorDiv.textContent = "아이디와 비밀번호를 입력해주세요.";
+			  errorDiv.style.display='block';
+			  return;
+		  }
+		  
+		  try {
+			  const response = await fetch("/api/auth/login", {
+				  method : "POST",
+				  headers : {"Content-Type" : "applicatioin/json"},
+				  body : JSON.stringify({username, password})
+			  });
+			  
+/* fetch()함수로 서버에 요청을 보내면 HTTP응답 전체 정보(헤더, 상태코드, 바디 등)을 담고있는 Response 객체로 반환돼요.
+ * 	즉,response.json() = 응답 본문 JSON 문자열 → JS 객체로 변환
+		await을 붙였으니까 JSON파싱이 끝날 때까지 기다렸다가 그 결과(객체)를 result에 저장해요.
+*/			  
+			  const result = await response.json();
+			  
+			  if(result.success){
+				  //localstorage.setItem("accessToken", result.accessToken);
+				  //jwt 토큰 처리 (access토큰을 localstorage), 이후 요청은 localStorage.getItem("accessToken")을 뺴서, Authorization이름으로 헤더에 담아 보냄 
+				  location.href = "/home";
+				  
+			  } else {
+				  errorDiv.textContet = "아이디 또는 비밀번호가 잘못되었습니다.";
+				  errorDiv.style.display = 'block';
+			  }
+		  } catch(err) {
+			  console.log(err);
+			  errorDiv.textContent ="서버 오류가 발생했습니다.";
+			  errorDiv.style.display = 'block';
+		  }
+		  
+		  
+		
+		});
+	}
+	
 </script>
-
+</head>
 <body>
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
+
   <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
     
     <!-- 로그인 카드 -->
@@ -40,7 +82,7 @@
         </div>
         <div class="mb-3">
           <input type="password" class="form-control" id="login-pwd" name="password" placeholder="비밀번호" required>
-          <div id="login-error" class="text-danger mt-1" style="display: none;">아이디 또는 비밀번호가 잘못되었습니다.</div>
+          <div id="login-error" class="text-danger mt-1" style="display: none;"></div>
         </div>
         
         <div class="d-flex justify-content-between mb-3">
@@ -54,7 +96,7 @@
           </div>
         </div>
         
-        <button type="submit" id="login-btn" class="btn btn-primary w-100 mb-3">로그인</button>
+        <button type="button" id="login-process-btn" class="btn btn-primary w-100 mb-3">로그인</button>
       </form>
       
       <!-- 아이디/비번 찾기 & 회원가입 -->
@@ -63,7 +105,7 @@
         <span>|</span>
         <a href="#" onclick="alert('비밀번호 찾기 기능')">비밀번호 찾기</a>
         <span>|</span>
-        <a href="#" id="join-page" onclick="joinPage()">회원가입</a>
+        <a href="${contextPath }/join" id="join-page" onclick="joinPage()">회원가입</a>
       </div>
       
       <!-- 소셜 로그인 -->

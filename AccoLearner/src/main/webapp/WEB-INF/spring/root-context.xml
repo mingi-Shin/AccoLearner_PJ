@@ -42,21 +42,21 @@
         <property name="maxLifetime" value="${db.maxLifetime}"/>
     </bean>
 
-    <!-- MyBatis 설정 -->
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
-         <!-- 아래 파일에 MyBatis 전역 설정이 있음 -->
-        <property name="configLocation" value="classpath:mybatis-config.xml"/>
-        <property name="mapperLocations" value="classpath:mappers/**/*Mapper.xml"/>
-    </bean>
-
     <!-- SqlSessionTemplate -->
     <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
         <constructor-arg ref="sqlSessionFactory"/>
     </bean>
 
+    <!-- MyBatis 설정 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+         <!-- 아래 파일에 MyBatis 전역 설정이 있음 -->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="mapperLocations" value="classpath:mappers/*Mapper.xml"/>
+    </bean>
+
     <!-- Mapper 인터페이스 자동 스캔 -->
-    <mybatis-spring:scan base-package="kr.co.langstudy.**.mapper"/>
+    <mybatis-spring:scan base-package="kr.co.accoLearner.mapper"/>
 
     <!-- 트랜잭션 매니저 -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -80,6 +80,10 @@
 
     <!-- 파일 업로드 설정 (MultipartResolver) -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"/>
+
+		<!-- API 키 보관 properties 등록 : @Value로 읽기위해서 -->
+		<context:property-placeholder location="classpath:api-config.properties"/>
+		
 
     <!-- 스케줄러 활성화 (필요시) -->
     <!-- <task:annotation-driven/> -->

@@ -1,0 +1,14 @@
+@RequestBody → JSON 수신
+@ResponseEntity → JSON 응답 + 상태코드 제어 가능
+
+
+잘못된 경우	                                   설명
+@ResponseBody만 붙이고 @RequestBody 안 씀.	     JSON 데이터를 못 받음 (null 들어옴)
+@RequestBody만 쓰고 @ResponseBody 안 씀.	       응답을 JSP view로 해석하려고 시도함
+@RestController 쓰면?	                         자동으로 모든 메서드에 @ResponseBody가 적용됨
+
+정리 요약표
+역할	            애너테이션	                         방향	                설명
+요청 JSON 수신	    @RequestBody	                   클라이언트 → 서버	    JSON을 자바 객체로 변환
+응답 JSON 반환   	@ResponseBody or ResponseEntity	 서버 → 클라이언트	    자바 객체를 JSON으로 변환
+REST 전용 컨트롤러	@RestController	                 양방향	              위 둘을 자동으로 포함

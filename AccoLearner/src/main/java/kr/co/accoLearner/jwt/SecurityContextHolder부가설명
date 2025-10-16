@@ -1,0 +1,15 @@
+핵심 개념
+
+사용자의 인증(Authentication) 정보 = Principal(사용자정보) + Credentials(인증정보) + Authorities(권한)
+
+SecurityContextHolder는 “현재 요청을 처리하는 스레드(작업자)”에게
+잠깐 동안 “인증정보(로그인 정보)”를 들려주는 메모지 같은 존재예요.
+->
+스프링 시큐리티는 각 요청이 들어올 때마다
+요청을 맡은 스레드(직원)에게 “개인 메모지(ThreadLocal)” 를 하나 줍니다.
+여기에 SecurityContextHolder가 인증정보(Authentication)를 써놓고,
+요청이 끝나면 메모지를 찢어버립니다. 
+그래서 요청마다 독립적인 SecurityContext 가 생기고,
+다른 요청과 절대 섞이지 않아요
+
+(매 요청이 끝날 때, 다른 필터가 SecurityContextHolder.clearContext()를 실행해서 정보가 삭제됨!)

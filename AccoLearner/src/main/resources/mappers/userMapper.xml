@@ -3,6 +3,18 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="kr.co.langstudy.mapper.UserMapper">
+<!-- @Mapper와 패키지명, 인터페이스명 같아야함 -->
+<mapper namespace="kr.co.accoLearner.mapper.UserMapper">
   <!-- SQL 구문들 -->
+  
+  <!-- 회원가입 -->
+  <!-- PostgreSQL의 BIGSERIAL은 자동 증가이므로, user_idx를 insert 후에 받아오고싶다면 아래처럼 설정 -->
+  <insert id="insertUser" parameterType="kr.co.accoLearner.dto.UserDTO" useGeneratedKeys="true" keyProperty="userIdx" keyColumn="user_idx">  	
+  	INSERT INTO users (login_id, password, nickname, email, email_subscribed, kakao_subscribed) 
+		VALUES (#{loginId}, #{password}, #{nickname}, #{email}, #{emailSubscribed}, #{kakaoSubscribed})
+  </insert>
+  
+  <!-- 회원탈퇴:논리적 -->
+  
+  
 </mapper>

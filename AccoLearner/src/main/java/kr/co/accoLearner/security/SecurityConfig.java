@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -49,8 +50,14 @@ public class SecurityConfig {
   		.authorizeHttpRequests(auth -> auth
   			//극초반에는 모두 오픈하고 개발
       	.requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
-			);
+      	
+			)
   		
+  		//.httpBasic(basic -> basic.disable()) //HTTP Basic 인증필터 추가: 브라우저의 인증 팝업 창이나 API 클라이언트(Postman, curl 등)를 통해 인증이 가능
+  		.formLogin(form -> form.disable())
+  		.logout(logout -> logout.disable())
+  	  //아래는 JWT작업 
+  	  .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); //세션사용안함, 
   		return http.build();
   }
   

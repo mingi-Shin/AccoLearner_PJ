@@ -10,7 +10,7 @@ public class MainController {
   
   private static final Logger logger = LoggerFactory.getLogger(MainController.class);
   
-  @GetMapping("/")
+  @GetMapping("/home")
   public String main() {
     logger.info("메인 페이지 요청 도착 ");
     logger.debug("디버그용 상세 로그입니다. ");

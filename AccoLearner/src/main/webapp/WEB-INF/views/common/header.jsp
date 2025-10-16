@@ -29,7 +29,7 @@
 	document.addEventListener("DOMContentLoaded", function(){
 		console.log("DOM이 준비되었습니다!");
 		
-		const loginBtn = document.getElementById("login-btn");
+		const loginBtn = document.getElementById("login-page-btn");
 		loginBtn.addEventListener("click", () => {
 			location.href="/login";
 		});
@@ -82,7 +82,7 @@
 
         <div class="ms-2">
           <form class="container-fluid justify-content-start">
-            <button class="btn btn-outline-secondary" type="button" id="login-btn">로그인</button>
+            <button class="btn btn-outline-secondary" type="button" id="login-page-btn">로그인</button>
           </form>
         </div>
       </div>
