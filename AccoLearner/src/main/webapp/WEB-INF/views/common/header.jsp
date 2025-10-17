@@ -9,8 +9,9 @@
 
 <!-- 부모 jsp와 공유함 -->
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
-<c:set var="user" value="${SPRING_SECURITY_CONTEXT.authentication.principal}" />
-<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities}" />
+	<!-- 이거는 세션로그인 전용 JSTL임, 세션안쓰면 쓸일 없음 -->
+	<c:set var="user" value="${SPRING_SECURITY_CONTEXT.authentication.principal}" />
+	<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities}" />
 
 <!DOCTYPE html>
 <html>
@@ -44,7 +45,7 @@
 <body>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Navbar scroll</a>
+      <a class="navbar-brand" href="/home">AccoLearner</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
         aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -53,15 +54,15 @@
       <div class="collapse navbar-collapse" id="navbarScroll">
         <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link active" aria-current="page" href="/home">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
+            <a class="nav-link" href="#">소개</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
-              Link
+             	학습하기
             </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="#">Action</a></li>
@@ -81,10 +82,27 @@
         </form>
 
         <div class="ms-2">
-          <form class="container-fluid justify-content-start">
-            <button class="btn btn-outline-secondary" type="button" id="login-page-btn">로그인</button>
-          </form>
+          <div class="container-fluid justify-content-start">
+          	
+          	<security:authorize access="!isAuthenticated()">
+	            <button class="btn btn-outline-secondary" type="button" id="login-page-btn">로그인</button>
+          	</security:authorize>
+          	<security:authorize access="isAuthenticated()">
+          		<li class="nav-item dropdown">
+          			<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"aria-expanded="false">
+          				<security:authentication property="principal.nickname"/>
+          			</a>
+		            <ul class="dropdown-menu">
+              		<li><a class="dropdown-item" href="#">마이페이지</li>
+              		<li><hr class="dropdown-divider"></li>
+              		<li><a class="dropdown-item" href="#">로그아웃</a></li>
+            		</ul>
+          		</li>
+          	</security:authorize>
+          </div>
         </div>
+        
+        
       </div>
     </div>
   </nav>
