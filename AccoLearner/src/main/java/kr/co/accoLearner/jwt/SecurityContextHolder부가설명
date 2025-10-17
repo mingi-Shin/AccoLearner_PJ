@@ -27,3 +27,7 @@ JWT방식은 ThreadLocal에만 저장되고, 세션(HttpSession)에는 저장하
 ----------------------------------------------------------
 스프링 시큐리티는 기본적으로 UsernamePasswordAuthenticationFilter를 필터 체인에 등록
 하지만 JWT, json 등을 쓰지못하는 한계 발생. 그래서 extends해서 새로운 loginFilter를 만들어주고, SecurityConfig에서 이를 대체 
+
+-------------------------------------------------------------
+Spring Security는 AuthenticationManager → AuthenticationProvider → UserDetailsService를 거쳐 인증 시 UserDetails를 사용
+
