@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import kr.co.accoLearner.dto.UserDTO;
@@ -49,7 +51,7 @@ public class JwtUtil {
    * @return
    */
   public String createJwtToken(String category, UserDTO user, Long expiredMs) {
-    logger.info("jwt 토큰 생성 시작 : ", category);
+    logger.info("jwt 토큰 생성 시작, 타입 : ", category);
     try {
       return Jwts.builder()
           .claim("category", category)
@@ -69,8 +71,17 @@ public class JwtUtil {
   }
   
   /**
-   * JWT 토큰 검증 (속성 꺼내기 : category, userIdx, nickname, email, role, iss, expiration)
+   * JWT 토큰 검증 (사인검증, 속성 꺼내기 : category, userIdx, nickname, email, role, iss, expiration)
    */
+  
+  //서명검증! Filter에서 catch하고 있으므로 여기서 할필요 없음 
+  public void validateToken(String token) throws JwtException {
+    Jwts.parser()
+      .verifyWith(secretKey)
+      .build()
+      .parseSignedClaims(token);
+  }
+  
   public String getCategory(String token) {
     try {
       return Jwts.parser() // 파서(parser)를 생성
@@ -151,7 +162,7 @@ public class JwtUtil {
           .getExpiration().before(new Date());
     } catch (JwtException e) {
       e.printStackTrace();
-      throw new IllegalArgumentException("Expired JWT Token", e);
+      throw new IllegalArgumentException("Invalid JWT Token", e);
     }
   }
   

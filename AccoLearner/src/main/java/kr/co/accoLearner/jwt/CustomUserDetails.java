@@ -17,11 +17,11 @@ import lombok.Data;
  *  꺼내서 쓸 값들을 여기서 get메서드로 만들어주면 된다.
  */
 @Data
-public class CustomeUserDetails implements UserDetails {
+public class CustomUserDetails implements UserDetails {
   
   private UserDTO userDTO;
   
-  public CustomeUserDetails(UserDTO userDTO) {
+  public CustomUserDetails(UserDTO userDTO) {
     this.userDTO = userDTO;
   }
 
@@ -38,6 +38,8 @@ public class CustomeUserDetails implements UserDetails {
   public String getPassword() {
     return userDTO.getPassword();
   }
+  
+  //프로필사진..? 없어 지금은 
 
   @Override
   public String getUsername() {

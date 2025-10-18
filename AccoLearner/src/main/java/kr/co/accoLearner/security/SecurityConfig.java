@@ -81,9 +81,9 @@ public class SecurityConfig {
 	  loginFilter.setAuthenticationManager(authManager(http));
 	  loginFilter.setFilterProcessesUrl("/api/auth/login"); //로그인필터 연동 
   	  
-	  //필터 등록
+	  //필터 등록 (Jwtfilter -> loginFilter)
 	  http
-  	  .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+  	  .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class) //JWT를 필터체인에 등록을 해야 실행됨 
   	  .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
   		return http.build();
   }
