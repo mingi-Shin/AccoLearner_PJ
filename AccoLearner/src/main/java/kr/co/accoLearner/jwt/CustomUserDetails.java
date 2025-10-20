@@ -58,28 +58,27 @@ public class CustomUserDetails implements UserDetails {
     return userDTO.getNickname();
   }
 
-  @Override
-  public boolean isAccountNonExpired() {
-    // TODO Auto-generated method stub
-    return false;
+  //시큐리티에서 모두 검증하는 요소들이다. 
+  @Override //계정 만료
+  public boolean isAccountNonExpired() { 
+    return !userDTO.getAccountStatus().equals("DELETED");
   }
 
-  @Override
+  @Override //계정 잠금
   public boolean isAccountNonLocked() {
-    // TODO Auto-generated method stub
-    return false;
+    return userDTO.getAccountStatus().equals("ACTIVE");
   }
 
-  @Override
+  @Override //비밀번호 만료 
   public boolean isCredentialsNonExpired() {
-    // TODO Auto-generated method stub
-    return false;
+    // 기능없음 
+    return true;
   }
 
-  @Override
+  @Override //계정 활성화 여부 (계정 가입 미승인)
   public boolean isEnabled() {
-    // TODO Auto-generated method stub
-    return false;
+    //승인 기능 없음 
+    return true;
   }
   
   

@@ -32,35 +32,44 @@ public class SecurityConfig {
   
   private final JwtUtil jwtUtil;
   private final ObjectMapper objectMapper;
-  private final AuthenticationManager authManager;
+  private final UserDetailsServiceImpl userDetailsServiceImpl;
   
-  public SecurityConfig(JwtUtil jwtUtil, ObjectMapper objectMapper, AuthenticationManager authManager) {
+  public SecurityConfig(JwtUtil jwtUtil, ObjectMapper objectMapper, UserDetailsServiceImpl userDetailsServiceImpl) {
     this.jwtUtil = jwtUtil;
     this.objectMapper = objectMapper;
-    this.authManager = authManager;
+    this.userDetailsServiceImpl = userDetailsServiceImpl;
   }
-
+  
+  /*
+   * ObjectMapper클래스를 따로 만들어서 @Configuration 해줬음. 생성자 주입 중~
+   * @Bean 
+   * public ObjectMapper objectMapper() { 
+   *    return new ObjectMapper(); 
+   *  }
+   */
+  
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 	
 	@Bean
-	public UserDetailsService customUserDetailsService() {
-		return new CustomUserDetailsService();
+	public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+	  AuthenticationManagerBuilder authenticationManagerBuilder = 
+      http.getSharedObject(AuthenticationManagerBuilder.class);
+	    
+    authenticationManagerBuilder
+      .userDetailsService(userDetailsServiceImpl) //DB에서 사용자 정보(UserDetails)를 가져오는 방법을 알랴줌
+      .passwordEncoder(passwordEncoder()); //스프링 시큐리티가 로그인 시 입력한 비밀번호를 암호화된 DB 비밀번호와 비교할 때 사용할 인코더를 지정
+	    //DaoAuthenticationProvider가 내부적으로: passwordEncoder.matches(rawPassword, encodedPasswordFromDB) 수행
+    
+    return authenticationManagerBuilder.build();
 	}
 	
-	@Bean
-	public AuthenticationManager authManager(HttpSecurity http) throws Exception{
-		AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-		authenticationManagerBuilder.userDetailsService(customUserDetailsService()).passwordEncoder(passwordEncoder());
-		
-		return authenticationManagerBuilder.build();
-	}
 	
 	//나만의 커스텀 SecurityFilterChain 생성(@Bean) = @EnableWebSecurity가 있을 때만 활성화
   @Bean
-  public SecurityFilterChain customSecurityFilterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain customSecurityFilterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
   	
   	http
   		.csrf(csrf -> csrf.disable()) //jwt를 SPA환경에서 쓰면 (header), CSRF토큰 사용할 필요 없음 
@@ -78,12 +87,11 @@ public class SecurityConfig {
 
   	//jwt용 LoginFilter 생성
 	  LoginFilter loginFilter = new LoginFilter(jwtUtil, objectMapper, authManager);
-	  loginFilter.setAuthenticationManager(authManager(http));
 	  loginFilter.setFilterProcessesUrl("/api/auth/login"); //로그인필터 연동 
   	  
 	  //필터 등록 (Jwtfilter -> loginFilter)
 	  http
-  	  .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class) //JWT를 필터체인에 등록을 해야 실행됨 
+  	  .addFilterBefore(new JwtFilter(jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class) //JWT를 필터체인에 등록을 해야 실행됨 
   	  .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
   		return http.build();
   }

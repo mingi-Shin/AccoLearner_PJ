@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -58,8 +59,8 @@ public class JwtFilter extends OncePerRequestFilter {
     String requestHeader = request.getHeader("Authorization");
     String accessToken = null;
     
-    if(requestHeader == null) {
-      logger.info("Authorization 헤더 없음. 다음 필터로 이동");
+    if(requestHeader == null || !requestHeader.startsWith("Bearer ")) {
+      logger.info("Authorization 헤더가 없거나 Bearer로 시작하지 않음");
       filterChain.doFilter(request, response);
       return;
     }
@@ -71,7 +72,6 @@ public class JwtFilter extends OncePerRequestFilter {
     /**
      *  2. Authorization 헤더 존재, access토큰 검증 시작 
      */
-    
     // 1. 서명 검증
     try {
       jwtUtil.validateToken(accessToken);
@@ -124,16 +124,30 @@ public class JwtFilter extends OncePerRequestFilter {
     
     
     /**
-     *  모든 검증 통과 
+     *  모든 검증 통과함 
      */
-    logger.info("모든 토큰검증을 통과 -> SecurityContextHolder 세션 저장  ");
+    logger.info("모든 토큰검증을 통과 -> 유저정보 SecurityContextHolder 세션에 저장  ");
+    
+    // 1. 토큰정보로 userDTO 생성
     UserDTO userVo = new UserDTO();
     userVo.setUserIdx(Long.parseLong(jwtUtil.getUserIdx(accessToken)));
     userVo.setEmail(jwtUtil.getEmail(accessToken));
     userVo.setNickname(jwtUtil.getNickname(accessToken));
     userVo.setRole(Role.valueOf(jwtUtil.getRole(accessToken)));
 
+    // 2. userDTO를 UserDetails 구현체로 변환 ( security는 UserDetails 타입만 인식하기 때문에)
+    CustomUserDetails customUser = new CustomUserDetails(userVo);
     
+    // 3. UserDetails로 인증객체 생성(Authentication)
+    Authentication authToken = new UsernamePasswordAuthenticationToken(customUser, null, customUser.getAuthorities());
+                       
+    // 4. 현재 요청 스레드에 인증정보 보관 : @AuthenticationPrincipal로 사용가능 
+    SecurityContextHolder.getContext().setAuthentication(authToken);
+    
+    logger.info("현재 요청 스레드 보관 정보 : {}", SecurityContextHolder.getContext().getAuthentication());
+    
+    // 5. 다음 필터 
+    filterChain.doFilter(request, response);
     
   }
   

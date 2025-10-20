@@ -26,6 +26,8 @@
 		  const password = document.getElementById("login-pwd").value.trim();
 		  const errorDiv = document.getElementById("login-error");
 		  
+		  console.log(username + " / " + password);
+		  
 		  if(!username||!password){
 			  errorDiv.textContent = "아이디와 비밀번호를 입력해주세요.";
 			  errorDiv.style.display='block';
@@ -35,7 +37,7 @@
 		  try {
 			  const response = await fetch("/api/auth/login", {
 				  method : "POST",
-				  headers : {"Content-Type" : "applicatioin/json"},
+				  headers : {"Content-Type" : "application/json"},
 				  body : JSON.stringify({username, password})
 			  });
 			  
@@ -43,14 +45,23 @@
  * 	즉,response.json() = 응답 본문 JSON 문자열 → JS 객체로 변환
 		await을 붙였으니까 JSON파싱이 끝날 때까지 기다렸다가 그 결과(객체)를 result에 저장해요.
 */			  
+/**
+// 이후 다른 API 호출 시
+	const response = await fetch("/api/some-endpoint", {
+	    method: "GET",
+	    headers: {
+	        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+	    }
+	});
+*/
 			  const result = await response.json();
 			  
 			  if(result.success){
-				  //localstorage.setItem("accessToken", result.accessToken);
-				  //jwt 토큰 처리 (access토큰을 localstorage), 이후 요청은 localStorage.getItem("accessToken")을 뺴서, Authorization이름으로 헤더에 담아 보냄 
-				  location.href = "/home";
+				  localStorage.setItem("accessToken", result.accessToken);
+				  location.href = "/";
 				  
 			  } else {
+				  alert(result.message);
 				  errorDiv.textContet = "아이디 또는 비밀번호가 잘못되었습니다.";
 				  errorDiv.style.display = 'block';
 			  }

@@ -35,6 +35,7 @@ public class JwtUtil {
    * jwtKey를 배열변환하여 secretKey변수에 초기화 
    */
   public JwtUtil(@Value("${spring.jwt.key}") String jwtKey, Environment environment) {
+    // 최소 256비트(32바이트) 이상이어야 HS256 사용 가능
     secretKey = new SecretKeySpec(
         jwtKey.getBytes(StandardCharsets.UTF_8), //문자열 키를 바이트 배열(byte[]) 로 변환
         Jwts.SIG.HS256.key().build().getAlgorithm()

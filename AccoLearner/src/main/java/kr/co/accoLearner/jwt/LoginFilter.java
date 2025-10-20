@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.security.auth.login.AccountExpiredException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,10 +17,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,19 +69,20 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     try {
       //JSON 파싱 = .getInputStream() -> HTTP요청 바디 읽기, .readValue() -> JSON을 Java객체(LoginRequest)로 변환
       LoginRequestDTO loginRequestVO = objectMapper.readValue(request.getInputStream(), LoginRequestDTO.class);
-      logger.info("로그인 시도 아이디 : {}", loginRequestVO.getLoginId());
+      logger.info("로그인 시도 아이디 : {}", loginRequestVO.getUsername());
       
-      if(loginRequestVO.getLoginId().trim() == null || loginRequestVO.getPassword() == null) {
+      if(loginRequestVO.getUsername().trim() == null || loginRequestVO.getPassword() == null) {
         throw new BadCredentialsException("이메일과 비밀번호 입력해주세요.");
       }
       
       //인증 토큰 생성 (id, password)
       UsernamePasswordAuthenticationToken authToken = 
-          new UsernamePasswordAuthenticationToken(loginRequestVO.getLoginId(), loginRequestVO.getPassword());
+          new UsernamePasswordAuthenticationToken(loginRequestVO.getUsername(), loginRequestVO.getPassword());
       
 
    // 1. AuthenticationManager의 authenticate()에 로그인 토큰(authToken)을 전달
    // 2. 내부의 AuthenticationProvider가 아이디/비밀번호 검증 수행
+   //    -- 자세히 : UserDetailsService.loadUserByUsername() 호출하여 검증 
    // 3. 성공 시 → 사용자정보(UserDetails)가 담긴 Authentication 객체 리턴
    //    실패 시 → AuthenticationException 발생 (return 없음)
    // 4. Authentication은 principal(사용자정보 : UserDetails 타입), credentials(비번/null), authorities(권한), authenticated(boolean) 등으로 구성
@@ -99,7 +104,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
   
   
   /**
-   *  로그인 성공시 ( = .authenticate(authToken) 성공)
+   *  로그인 성공시 ( = .authenticate(authToken) 성공, AuthenticationSuccessHandler를 대신함 )
    */
   @Override
   protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
@@ -123,24 +128,28 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
       ResponseCookie refreshCookie = createRefreshCookie(refreshToken);
       response.addHeader("Set-Cookie", refreshCookie.toString());
       
-      // 5. (Option) 성공 응답 객체 생성
+      // 5. SecurityContextHolder에 넣기
+      //SecurityContextHolder.getContext().setAuthentication(authResult);
+      
+      // 6. (Option) 성공 응답 객체 생성
       String rootUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
       LoginResponseDTO loginResponseDTO = new LoginResponseDTO(
           true,
           "로그인 성공",
           accessToken,
           refreshToken,
-          rootUrl + "/home",
+          rootUrl + "/",
           customUser.getUserDTO().getRole().toString()
           );
       
-      // 6. 응답타입 설정 
+      // 7. 응답타입 설정 
       response.setContentType("application/json");
       response.setCharacterEncoding("UTF-8");
       response.setStatus(HttpStatus.OK.value()); //프론트엔드 if문 분기점 
       
-      // 7. 실제 데이터 전송 (java객체 -> josn문자열), 프론트엔드에서 받아서 여러가지 작업 처리 
+      // 8. 실제 데이터 전송 (java객체 -> josn문자열), 프론트엔드에서 받아서 여러가지 작업 처리 
       objectMapper.writeValue(response.getWriter(), loginResponseDTO);
+      
       
     } catch (Exception e) {
       logger.info("로그인 성공 처리중 오류 ", e);
@@ -162,12 +171,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
   }
   
   /**
-   *  로그인 실패시 ( = .authenticate(authToken)에서 예외발생)
+   *  로그인 실패시 ( = .authenticate(authToken)에서 예외발생, AuthenticationFailureHandler를 대신함 )
    */
   @Override
   protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
           AuthenticationException failed) throws IOException, ServletException {
-      
+    
+    //failed는 CustomUserDetails 에서 던진다.
     logger.error("=== JWT 로그인 실패 ===", failed);
     
     /**
@@ -175,11 +185,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
      */
     String failMessage;
     if(failed instanceof BadCredentialsException) {
-      failMessage = "이메일 또는 비밀번호가 옳바르지 않습니다.";
+      failMessage = "이메일 또는 비밀번호를 다시 한번 확인해주세요.";
     } else if(failed instanceof InternalAuthenticationServiceException) {
-      failMessage = "사용자 정보를 찾을 수 없습니다.";
+      failMessage = "사용자 정보를 찾을 수 없습니다."; //
+    } else if(failed.getCause() instanceof LockedException) {
+      failMessage = "계정이 잠겨 있습니다. 고객센터에 문의해주세요.";
+    } else if(failed.getCause() instanceof DisabledException) {
+      failMessage = "운영수칙을 위반하여 계정이 정지됐습니다. 고객센ㅌ터에 문의해주세요.";
+    } else if(failed.getCause() instanceof AccountExpiredException) {
+      failMessage = "회원 탈퇴한 계정입니다.";
     } else {
-      failMessage = "로그인에 실패했습니다.";
+      failMessage = "알수없는 이유로 로그인에 실패했습니다.. ㅠㅠ";
     }
     
     // 로그인 실패 응답 설정 

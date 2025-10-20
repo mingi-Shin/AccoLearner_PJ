@@ -68,10 +68,8 @@
 				const result = await response.json();
 				
 				if(result.success){
-					console.log("가입성공");
-					location.href = "/home";
+					location.href = "/login";
 				} else {
-					console.log("가입실패?");
 					//가입실패 
 				}
 			} catch (err){

@@ -25,7 +25,7 @@ public class UserDTO {
   private Boolean kakaoSubscribed;
   private Boolean loginStatus; 
   
-  private Enum<Role> role; //ADMIN, USER, GUEST
+  private Role role; //ADMIN, USER, GUEST
   
 }
 

@@ -16,4 +16,9 @@
   <!-- 회원탈퇴:논리적 -->
   
   
+  <!-- 로그인 : SelectUserByUsername -->
+  <select id="SelectUserByUsername" parameterType="string" resultType="kr.co.accoLearner.dto.UserDTO">
+		SELECT * FROM users WHERE login_id = #{username}  
+  </select>
+  
 </mapper>

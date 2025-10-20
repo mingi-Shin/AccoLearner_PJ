@@ -13,4 +13,7 @@ public interface UserMapper {
   //회원탈퇴
   public UserDTO deleteUser(UserDTO userDto);
   
+  //로그인
+  public UserDTO SelectUserByUsername(String username);
+  
 }
