@@ -9,7 +9,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import kr.co.accoLearner.dto.UserDTO;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *  (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -17,13 +19,11 @@ import lombok.Data;
  *  꺼내서 쓸 값들을 여기서 get메서드로 만들어주면 된다.
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CustomUserDetails implements UserDetails {
   
   private UserDTO userDTO;
-  
-  public CustomUserDetails(UserDTO userDTO) {
-    this.userDTO = userDTO;
-  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -54,7 +54,7 @@ public class CustomUserDetails implements UserDetails {
     return userDTO.getEmail();
   }
   
-  public String nickname() {
+  public String getNickname() {
     return userDTO.getNickname();
   }
 

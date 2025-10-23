@@ -9,7 +9,8 @@
 
 <!-- 부모 jsp와 공유함 -->
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
-	<!-- 이거는 세션로그인 전용 JSTL임, 세션안쓰면 쓸일 없음 -->
+
+	<!-- 이거는 세션로그인 전용 JSTL임, 세션안쓰면 쓸일 없음! -->
 	<c:set var="user" value="${SPRING_SECURITY_CONTEXT.authentication.principal}" />
 	<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities}" />
 
@@ -87,13 +88,18 @@
           	<security:authorize access="!isAuthenticated()">
 	            <button class="btn btn-outline-secondary" type="button" id="login-page-btn">로그인</button>
           	</security:authorize>
+          	
           	<security:authorize access="isAuthenticated()">
           		<li class="nav-item dropdown">
           			<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"aria-expanded="false">
-          				<security:authentication property="principal.nickname"/>
+          				<security:authentication property="principal.nickname"/> <!--principal : CustomUserDetails에서 가져옴 -->
+			            <security:authorize access="hasRole('USER')">
+			                <span>USER</span>
+			            </security:authorize>
           			</a>
+          			
 		            <ul class="dropdown-menu">
-              		<li><a class="dropdown-item" href="#">마이페이지</li>
+              		<li><a class="dropdown-item" href="#">마이페이지 </a></li>
               		<li><hr class="dropdown-divider"></li>
               		<li><a class="dropdown-item" href="#">로그아웃</a></li>
             		</ul>

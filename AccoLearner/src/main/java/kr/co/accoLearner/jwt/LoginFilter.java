@@ -67,7 +67,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     }
     
     try {
-      //JSON 파싱 = .getInputStream() -> HTTP요청 바디 읽기, .readValue() -> JSON을 Java객체(LoginRequest)로 변환
+      //JSON 파싱 = .getInputStream() -> HTTP요청 바디 읽기 / .readValue() -> JSON을 Java객체(LoginRequest)로 변환
       LoginRequestDTO loginRequestVO = objectMapper.readValue(request.getInputStream(), LoginRequestDTO.class);
       logger.info("로그인 시도 아이디 : {}", loginRequestVO.getUsername());
       
@@ -125,7 +125,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
       response.setHeader("Authorization", "Bearer " + accessToken);
       
       // 4. refresh 토큰 -> 쿠키 설정 ("Set-Cookie")
-      ResponseCookie refreshCookie = createRefreshCookie(refreshToken);
+      ResponseCookie refreshCookie = jwtUtil.createRefreshCookie(refreshToken);
       response.addHeader("Set-Cookie", refreshCookie.toString());
       
       // 5. SecurityContextHolder에 넣기
@@ -209,18 +209,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     objectMapper.writeValue(response.getWriter(), failResponse);
     
   }
-  
-  /**
-   * Refresh 토큰 HttpOnly 쿠키 생성 메서드
-   */
-  private ResponseCookie createRefreshCookie(String refreshToken) {
-    return ResponseCookie.from("refresh", refreshToken)
-        .httpOnly(true) // js에서 쿠키 접근 불가
-        .secure(false) // 개발환경 : false, 운영환경 : ture
-        .sameSite("Lax") // CSRF방지 (Lax : 크로스사이트 GET 요청만 허용, 보안성은 Strict가 더 높음)
-        .path("/")
-        .maxAge(Duration.ofHours(24))
-        .build();
-  }
+
   
 }

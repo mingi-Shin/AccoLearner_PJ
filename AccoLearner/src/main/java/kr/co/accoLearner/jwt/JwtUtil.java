@@ -1,6 +1,7 @@
 package kr.co.accoLearner.jwt;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -56,7 +58,7 @@ public class JwtUtil {
     try {
       return Jwts.builder()
           .claim("category", category)
-          .claim("userIdx", user.getUserIdx())
+          .claim("userIdx", String.valueOf( user.getUserIdx()))
           .claim("nickname", user.getNickname())
           .claim("email", user.getEmail())
           .claim("role", user.getRole())
@@ -180,6 +182,20 @@ public class JwtUtil {
       throw new IllegalArgumentException("Invalid JWT Token", e);
     }
   }
+  
+  /**
+   * Refresh 토큰 HttpOnly 쿠키 생성 메서드
+   */
+  public ResponseCookie createRefreshCookie(String refreshToken) {
+    return ResponseCookie.from("refresh", refreshToken)
+        .httpOnly(true) // js에서 쿠키 접근 불가
+        .secure(false) // 개발환경 : false, 운영환경 : ture
+        .sameSite("Lax") // CSRF방지 (Lax : 크로스사이트 GET 요청만 허용, 보안성은 Strict가 더 높음)
+        .path("/")
+        .maxAge(Duration.ofHours(24))
+        .build();
+  }
+  
   
   /**
    * 쿠키 꺼내기 (refresh같은 거)

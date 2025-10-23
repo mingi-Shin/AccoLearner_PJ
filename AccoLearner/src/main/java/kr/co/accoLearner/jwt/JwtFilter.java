@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -59,15 +60,42 @@ public class JwtFilter extends OncePerRequestFilter {
     String requestHeader = request.getHeader("Authorization");
     String accessToken = null;
     
-    if(requestHeader == null || !requestHeader.startsWith("Bearer ")) {
-      logger.info("Authorization 헤더가 없거나 Bearer로 시작하지 않음");
+    // 1. Authorization 헤더가 존재하고 Bearer로 시작하는 경우
+    if(requestHeader != null && requestHeader.startsWith("Beare ")) {
+      accessToken = requestHeader.substring(7);
+    }
+    
+    // 2. Authorization 헤더가 없어서 refresh에서 가져옴 (로그인 직후에만 해당할 예정) 
+    if(requestHeader == null) {
+      //refreshToken 쿠키에서 토큰 빼와 
+      String refreshToken = jwtUtil.resolveToken(request);
+      
+      logger.info("리프레쉬 토큰 : {}", refreshToken);
+      
+      //refresh도 없다? 그럼 다음 필터 
+      if(refreshToken == null) {
+        filterChain.doFilter(request, response);
+        return;
+      }
+      
+      //refresh가 있다. 검증
+      jwtUtil.validateToken(refreshToken);
+      
+      //검증 통과 -> setAuthentication 메서드 호출
+      afterLoginAddAuthentication(refreshToken);
+      
+      //테스트 중 
+      String authen = SecurityContextHolder.getContext().getAuthentication().toString();
+      logger.info("getAuthentication : {}", authen);
+      
+      Authentication autha = SecurityContextHolder.getContext().getAuthentication();
+      System.out.println(autha.getAuthorities());
+
+      
       filterChain.doFilter(request, response);
       return;
     }
     
-    if(requestHeader != null && requestHeader.startsWith("Bearer ")) {
-      accessToken = requestHeader.substring(7);
-    }
     
     /**
      *  2. Authorization 헤더 존재, access토큰 검증 시작 
@@ -149,6 +177,25 @@ public class JwtFilter extends OncePerRequestFilter {
     // 5. 다음 필터 
     filterChain.doFilter(request, response);
     
+  }
+  
+  /**
+   * refresh토큰으로 Authentication설정 
+   * @param refreshToken
+   */
+  private void afterLoginAddAuthentication(String refreshToken) {
+    
+    UserDTO userVo = new UserDTO();
+    userVo.setUserIdx(Long.parseLong(jwtUtil.getUserIdx(refreshToken)));
+    userVo.setEmail(jwtUtil.getEmail(refreshToken));
+    userVo.setNickname(jwtUtil.getNickname(refreshToken));
+    userVo.setRole(Role.valueOf(jwtUtil.getRole(refreshToken)));
+    
+    CustomUserDetails customUser = new CustomUserDetails(userVo);
+    
+    Authentication authToken = new UsernamePasswordAuthenticationToken(customUser, null, customUser.getAuthorities());
+    
+    SecurityContextHolder.getContext().setAuthentication(authToken);
   }
   
   
