@@ -16,5 +16,11 @@ public class MainController {
     logger.debug("디버그용 상세 로그입니다. ");
     return "index";
   }
+  
+  @GetMapping("/selfStudy")
+  public String selfStudy() {
+    logger.info("자바스크립트 연습 페이지 이동");
+    return "selfStudy/javaScript";
+  }
 
 }
