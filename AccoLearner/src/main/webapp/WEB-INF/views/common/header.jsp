@@ -85,25 +85,28 @@
         <div class="ms-2">
           <div class="container-fluid justify-content-start">
           	
-          	<security:authorize access="!isAuthenticated()">
+          	<security:authorize access="isAnonymous()">
 	            <button class="btn btn-outline-secondary" type="button" id="login-page-btn">로그인</button>
           	</security:authorize>
           	
           	<security:authorize access="isAuthenticated()">
-          		<li class="nav-item dropdown">
+          		<div class="nav-item dropdown">
           			<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"aria-expanded="false">
-          				<security:authentication property="principal.nickname"/> <!--principal : CustomUserDetails에서 가져옴 -->
-			            <security:authorize access="hasRole('USER')">
-			                <span>USER</span>
-			            </security:authorize>
+          				<security:authentication property="principal.nickname"/> <!-- CustomUserDetails.getUserDTO().getNickname() -->
           			</a>
           			
 		            <ul class="dropdown-menu">
+		            <!-- hasRole은 자동으로 "ROLE_" 접두어를 붙이기 때문에 UserDetails에서 권한을 가져올 때 ROLE_ 을 붙여줘야 하고, 
+		            			hasAuthority는 붙이지 않기 때문에 DB에 저장된 값 그대로를 비교한다. 
+		            -->
+		            	<security:authorize access="hasRole('USER')">
+		            		<li><security:authentication property="principal.email"/> </li>
+		            	</security:authorize>
               		<li><a class="dropdown-item" href="#">마이페이지 </a></li>
               		<li><hr class="dropdown-divider"></li>
               		<li><a class="dropdown-item" href="#">로그아웃</a></li>
             		</ul>
-          		</li>
+          		</div>
           	</security:authorize>
           </div>
         </div>

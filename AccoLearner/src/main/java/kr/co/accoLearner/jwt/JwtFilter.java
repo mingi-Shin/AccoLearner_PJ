@@ -85,11 +85,9 @@ public class JwtFilter extends OncePerRequestFilter {
       afterLoginAddAuthentication(refreshToken);
       
       //테스트 중 
-      String authen = SecurityContextHolder.getContext().getAuthentication().toString();
+      Authentication authen = SecurityContextHolder.getContext().getAuthentication();
       logger.info("getAuthentication : {}", authen);
-      
-      Authentication autha = SecurityContextHolder.getContext().getAuthentication();
-      System.out.println(autha.getAuthorities());
+      logger.info("authen.getAuthorities : {}", authen.getAuthorities());
 
       
       filterChain.doFilter(request, response);
