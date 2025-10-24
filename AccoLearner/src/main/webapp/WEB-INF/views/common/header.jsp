@@ -46,7 +46,7 @@
 <body>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/home">AccoLearner</a>
+      <a class="navbar-brand" href="/">AccoLearner</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
         aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -55,7 +55,7 @@
       <div class="collapse navbar-collapse" id="navbarScroll">
         <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/home">Home</a>
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">소개</a>
@@ -96,9 +96,8 @@
           			</a>
           			
 		            <ul class="dropdown-menu">
-		            <!-- hasRole은 자동으로 "ROLE_" 접두어를 붙이기 때문에 UserDetails에서 권한을 가져올 때 ROLE_ 을 붙여줘야 하고, 
-		            			hasAuthority는 붙이지 않기 때문에 DB에 저장된 값 그대로를 비교한다. 
-		            -->
+		            <!-- hasRole은 자동으로 "ROLE_" 접두어를 붙여서 비교하기 때문에, UserDetails에서 권한을 가져올 때 ROLE_ 을 붙여줘야 하고, 
+		            			hasAuthority는 붙이지 않기 때문에 DB에 저장된 값 그대로를 비교한다.  -->
 		            	<security:authorize access="hasRole('USER')">
 		            		<li><security:authentication property="principal.email"/> </li>
 		            	</security:authorize>
