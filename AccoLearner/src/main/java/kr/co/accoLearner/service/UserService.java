@@ -1,5 +1,8 @@
 package kr.co.accoLearner.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,10 +33,28 @@ public class UserService {
   }
   
   /**
-   * 회원탈퇴
+   * 회원탈퇴 (상태값 = DELETED)
    */
+  public int deleteUser(Long userIdx) {
+    int result = userMapper.deleteUser(userIdx);
+    return result;
+  }
   
   
+  /**
+   * 아이디, 이메일, 닉네임 중복 체크
+   */
+  public boolean duplicateUserBy(String checkField, String checkValue) {
+    //Object는 제너릭타입 : 어떤 값이라도 가능 
+    Map<String, Object> param = new HashMap<String, Object>();
+    
+    param.put("checkField", checkField);
+    param.put("checkValue", checkValue);
+    
+    int result = userMapper.selectUserBy(param);
+    
+    return result > 0;
+  }
   
   
 
