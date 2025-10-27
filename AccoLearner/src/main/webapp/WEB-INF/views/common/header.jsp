@@ -31,20 +31,45 @@
 	document.addEventListener("DOMContentLoaded", function(){
 		console.log("DOM이 준비되었습니다!");
 		
+		//로그인 버튼 클릭 페이지 이동
 		const loginBtn = document.getElementById("login-page-btn");
 		loginBtn.addEventListener("click", () => {
 			location.href="/login";
 		});
 		
+		//로그아웃 버튼 클릭 비동기처리 
+		
+		
 		
 		
 	});
+
 	
+	function logout(){
+		document.getElementById('logout').addEventListener('click', () => {
+			
+			//예시
+<!--			const token = localStorage.getItem("accessToken");
+	    fetch("/api/logout", {
+	        method: "POST",
+	        headers: {
+	            "Authorization": "Bearer " + token,
+	            "Content-Type": "application/json"
+	        }
+	    }).finally(() => {
+	        localStorage.removeItem("accessToken");
+	        localStorage.removeItem("refreshToken");
+	        location.href = "/";
+	    });-->
+			
+			alert('로그아웃');
+		});
+	}
 
 </script>
 
 <body>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top"> <!-- sticky-top 추가  -->
     <div class="container-fluid">
       <a class="navbar-brand" href="/">AccoLearner</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
@@ -73,7 +98,17 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link disabled" aria-disabled="true">Link</a>
+            <a class="nav-link active" aria-disabled="true" href="/community">커뮤니티</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" aria-disabled="true">|</a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link active" aria-disabled="true">contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" aria-disabled="true">공사중</a>
           </li>
         </ul>
 
@@ -103,7 +138,7 @@
 		            	</security:authorize>
               		<li><a class="dropdown-item" href="#">마이페이지 </a></li>
               		<li><hr class="dropdown-divider"></li>
-              		<li><a class="dropdown-item" href="#">로그아웃</a></li>
+              		<li><a class="dropdown-item" id="logout">로그아웃</a></li>
             		</ul>
           		</div>
           	</security:authorize>

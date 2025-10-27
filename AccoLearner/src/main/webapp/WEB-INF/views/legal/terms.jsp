@@ -12,7 +12,9 @@
 <title>This is a Template</title>
 </head>
 <body>
-<jsp:include page="/WEB-INF/views/common/header.jsp" />
+	<div class="mx-auto" style="width: 80%;">
+		<jsp:include page="/WEB-INF/views/common/header.jsp" />
+	</div>
 	
 	<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;"> 
     
@@ -27,7 +29,10 @@
 	
 	</div>
 
-<jsp:include page="/WEB-INF/views/common/bottom.jsp" />
+	<div class="mx-auto" style="width: 80%;">
+		<jsp:include page="/WEB-INF/views/common/bottom.jsp" />
+	</div>
+	
 </body>
 </html>
 <!--

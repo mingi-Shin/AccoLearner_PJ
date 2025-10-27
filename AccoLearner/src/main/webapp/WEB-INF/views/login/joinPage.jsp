@@ -155,13 +155,24 @@ function agreeTerms(){
 	let agreeServiceChkbox = document.getElementById('agreeTotalService')
 	let agreePrivacyChkbox = document.getElementById('privacPolicy')
 	
+	//전체동의 체크박스 
 	document.getElementById('agreeAll').addEventListener('change', function(){
-		alert('체인지');
-		//const checkboxes = document.querySelectAll('.cehckbox-input')
-	})
+		const checkBoxes = document.querySelectorAll('.checkbox-input:not(#agreeAll)');
+		checkBoxes.forEach(checkbox => {
+			checkbox.checked = this.checked;
+		});
+	});
 	
-	document.querySelectorAll('.checkbox-input')
-	
+	//개별 체크박스 
+	document.querySelectorAll('.checkbox-input:not(#agreeAll)').forEach( checkbox => { //각 요소를 checkbox 라고 설정 
+		checkbox.addEventListener('change', function(){
+			const allCheckboxes = document.querySelectorAll('.checkbox-input:not(#agreeAll)');
+			const checkedBoxes = document.querySelectorAll('.checkbox-input:not(#agreeAll):checked');
+			//전체박스 === 체크된 박스 개수비교 -> 전체동의 체크박스 체크여부 결정 
+			document.getElementById('agreeAll').checked = 
+				allCheckboxes.length === checkedBoxes.length;
+		});
+	});
 	
 	
 	
@@ -211,112 +222,117 @@ input.addEventListener('input', () => {
 
 </head>
 <body>
-<jsp:include page="/WEB-INF/views/common/header.jsp" />
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-	<div class="card p-4" style="max-width: 500px; width: 100%;">
-	  <h4 class="text-center mb-4">회원가입</h4>
-	
-	  <form action="${contextPath}/join" method="post">
-	
-	    <!-- 아이디 -->
-	    <div class="input-group flex-column form-section">
-	   		<label for="user-id " class="form-label">아이디</label>
-	   		<div class="d-flex">
-		      <input type="text" class="form-control" name="username" id="user-id" placeholder="4~15이내로 입력해주세요">
-		      <button type="button" class="btn btn-outline-secondary" id="id-dupl-btn">중복확인</button>
-	   		</div>
-	    </div>
-	
-	    <!-- 비밀번호 -->
-	    <div class="input-group flex-column form-section">
-	    	<label for="user-password " class="form-label">비밀번호 </label>
-	    	<div class="d-flex">
-		      <input type="password" class="form-control" name="password" id="user-password" placeholder="최소 6자 이(알파벳, 숫자 필수)">
-	    	</div>
-	    </div>
-	
-	    <!-- 이메일 -->
-	    <div class="input-group flex-column form-section">
-	    	<label for="user-email " class="form-label">이메일 </label>
-	    	<div class="d-flex">
-		      <input type="email" class="form-control" name="email" id="user-email" placeholder="example@domain.com">
-		      <button type="button" class="btn btn-outline-secondary" id="email-send-btn">인증코드 전송</button>
-	    	</div>
-	    </div>
-	
-	    <!-- 인증번호 -->
-	    <div class="input-group flex-column form-section">
-	    	<label for="email-code " class="form-label">인증번호</label>
-	      <div class="d-flex">
-		      <input type="text" class="form-control" id="email-code" placeholder="인증번호 입력">
-		      <button type="button" class="btn btn-outline-success" id="email-confirm-btn">확인</button>
-	      </div>
-	    </div>
-	
-	    <!-- 닉네임 -->
-	    <div class="input-group flex-column form-section">
-	    	<label for="nickname " class="form-label">닉네임</label>
-	    	<div class="d-flex">
-		      <input type="text" class="form-control" name="nickname" id="nickname" placeholder="별명을 알파벳, 한글, 숫자를 20자 이하로 입력해주세요.">
-		      <button type="button" class="btn btn-outline-secondary" id="nickname-dupl-btn">중복확인</button>
-	    	</div>
-	    </div>
-	
-	    <!-- 이메일 구독 옵션 -->
-	    <div class="mt-5">
-	    	<div class="d-flex justify-content-between mt-1 w-100">	
-	    		<div>
-	    			이메일 수신 동의 
-	    		</div>
-			    <div class="form-check form-switch">
-					  <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" name="emailSubscribed">
-					</div>
-	    	</div>
-	    	<small class="text-muted">AccoLearner에서 주최하는 다양한 이벤트, 정보성 뉴스레터 및 광고 수신여부를 설정할 수 있습니다.</small>
-	    </div>
-	    
-	    <!-- 약관동의 -->
-	    <div class="mt-5">
-	    	<div>약관동의</div>
-	    	<div class="d-flex flex-column mt-3"> <!-- 전체  -->
-	    	
-	    		<div class="form-check mt-2 mb-2"> <!-- 전체 -->
-	    			<input class="form-check-input checkbox-input" type="checkbox" id="agreeAll">
-	    			<label class="form-check-label" for="agreeAll">
-	    				<span class="fw-bold">전체동의</span>
-	    				<small class="text-muted">전체동의를 선택하시면 아래의 모든 약관에 동의하게 됩니다.</small>
-	    			</label>
-	    		</div>
-	    		
-	    		<hr class="flex-grow-1 border-top border-secondary opacity-40">
-	    		
-	    		<div class="my-3">
-	    			<div>
-	    				<input class="form-check-input me-1 checkbox-input" type="checkbox" id="agreeTotalService">
-	    					<span>통합 서비스 이용약관</span>
-	    					<a target="_blank" href="/legal/terms" class="">보기</a>
-	    			</div>
-	    			<div class="mt-1">
-	    				<input class="form-check-input me-1 checkbox-input" type="checkbox" id="privacPolicy">
-	    					<span>개인정보 처리방침</span>
-	    					<a target="_blank" href="/legal/privacy" class="">보기</a>
-	    			</div>
-	    		
-	    			<div></div>
-	    		</div>
-	    	</div>
-	    </div>
-	    
-	
-	    <!-- 버튼 -->
-	    <div class="mt-3">
-	      <button type="button" class="btn btn-primary w-100" id="join-btn">회원가입</button>
-	    </div>
-	
+	<div class="mx-auto" style="width: 80%;">
+		<jsp:include page="/WEB-INF/views/common/header.jsp" />
+	</div>
+	<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+		<div class="card p-4" style="max-width: 500px; width: 100%;">
+		  <h4 class="text-center mb-4">회원가입</h4>
+		
+		  <form action="${contextPath}/join" method="post">
+		
+		    <!-- 아이디 -->
+		    <div class="input-group flex-column form-section">
+		   		<label for="user-id " class="form-label">아이디</label>
+		   		<div class="d-flex">
+			      <input type="text" class="form-control" name="username" id="user-id" placeholder="4~15이내로 입력해주세요">
+			      <button type="button" class="btn btn-outline-secondary" id="id-dupl-btn">중복확인</button>
+		   		</div>
+		    </div>
+		
+		    <!-- 비밀번호 -->
+		    <div class="input-group flex-column form-section">
+		    	<label for="user-password " class="form-label">비밀번호 </label>
+		    	<div class="d-flex">
+			      <input type="password" class="form-control" name="password" id="user-password" placeholder="최소 6자 이(알파벳, 숫자 필수)">
+		    	</div>
+		    </div>
+		
+		    <!-- 이메일 -->
+		    <div class="input-group flex-column form-section">
+		    	<label for="user-email " class="form-label">이메일 </label>
+		    	<div class="d-flex">
+			      <input type="email" class="form-control" name="email" id="user-email" placeholder="example@domain.com">
+			      <button type="button" class="btn btn-outline-secondary" id="email-send-btn">인증코드 전송</button>
+		    	</div>
+		    </div>
+		
+		    <!-- 인증번호 -->
+		    <div class="input-group flex-column form-section">
+		    	<label for="email-code " class="form-label">인증번호</label>
+		      <div class="d-flex">
+			      <input type="text" class="form-control" id="email-code" placeholder="인증번호 입력">
+			      <button type="button" class="btn btn-outline-success" id="email-confirm-btn">확인</button>
+		      </div>
+		    </div>
+		
+		    <!-- 닉네임 -->
+		    <div class="input-group flex-column form-section">
+		    	<label for="nickname " class="form-label">닉네임</label>
+		    	<div class="d-flex">
+			      <input type="text" class="form-control" name="nickname" id="nickname" placeholder="별명을 알파벳, 한글, 숫자를 20자 이하로 입력해주세요.">
+			      <button type="button" class="btn btn-outline-secondary" id="nickname-dupl-btn">중복확인</button>
+		    	</div>
+		    </div>
+		
+		    <!-- 이메일 구독 옵션 -->
+		    <div class="mt-5">
+		    	<div class="d-flex justify-content-between mt-1 w-100">	
+		    		<div>
+		    			이메일 수신 동의 
+		    		</div>
+				    <div class="form-check form-switch">
+						  <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" name="emailSubscribed">
+						</div>
+		    	</div>
+		    	<small class="text-muted">AccoLearner에서 주최하는 다양한 이벤트, 정보성 뉴스레터 및 광고 수신여부를 설정할 수 있습니다.</small>
+		    </div>
+		    
+		    <!-- 약관동의 -->
+		    <div class="mt-5">
+		    	<div>약관동의</div>
+		    	<div class="d-flex flex-column mt-3"> <!-- 전체  -->
+		    	
+		    		<div class="form-check mt-2 mb-2"> <!-- 전체 -->
+		    			<input class="form-check-input checkbox-input" type="checkbox" id="agreeAll">
+		    			<label class="form-check-label" for="agreeAll">
+		    				<span class="fw-bold">전체동의</span>
+		    				<small class="text-muted">전체동의를 선택하시면 아래의 모든 약관에 동의하게 됩니다.</small>
+		    			</label>
+		    		</div>
+		    		
+		    		<hr class="flex-grow-1 border-top border-secondary opacity-40">
+		    		
+		    		<div class="my-3">
+		    			<div>
+		    				<input class="form-check-input me-1 checkbox-input" type="checkbox" id="agreeTotalService">
+		    					<span>통합 서비스 이용약관</span>
+		    					<a target="_blank" href="/legal/terms" class="">보기</a>
+		    			</div>
+		    			<div class="mt-1">
+		    				<input class="form-check-input me-1 checkbox-input" type="checkbox" id="privacPolicy">
+		    					<span>개인정보 처리방침</span>
+		    					<a target="_blank" href="/legal/privacy" class="">보기</a>
+		    			</div>
+		    		
+		    			<div></div>
+		    		</div>
+		    	</div>
+		    </div>
+		    
+		
+		    <!-- 버튼 -->
+		    <div class="mt-3">
+		      <button type="button" class="btn btn-primary w-100" id="join-btn">회원가입</button>
+		    </div>
+		
 	    </form>
 	  </div>
 	</div>
-<jsp:include page="/WEB-INF/views/common/bottom.jsp" />
+	
+	<div class="mx-auto" style="width: 80%;">
+		<jsp:include page="/WEB-INF/views/common/bottom.jsp" />
+	</div>
 </body>
 </html>
 <!--
