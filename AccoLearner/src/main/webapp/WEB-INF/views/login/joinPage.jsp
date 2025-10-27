@@ -117,6 +117,10 @@ function duplicateUserBy(){
 }
 async function duplicateUser(field, value){ //async는 함수선언 앞에 
 	
+	if(value == null || value.trim() === ""){
+		alert(" 빈칸입니다.");
+		return;
+	}
 	
 	try {
 		const response = await fetch('/api/user/duplicate', {
