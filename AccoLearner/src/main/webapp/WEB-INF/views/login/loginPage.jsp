@@ -84,7 +84,40 @@
   <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
     
     <!-- 로그인 카드 -->
-    <div class="card p-4" style="max-width: 400px; width: 100%;">
+    <div class="card p-4" style="max-width: 500px; width: 100%;">
+    
+    	<!-- Logo 와 사이트 소개란 -->
+    	<div class="d-flex flex-column mb-4">
+      	<div class="d-flex justify-content-center align-items-center mb-2 ">
+      		<img alt="로고" src="${contextPath }/resources/images/AccoLearner_Logo.png" style="max-width: 300px; max-height: 200px;" >
+      	</div>
+    		<h2 class="mt-6 text-center font-bold text 2xl">즐거운 회계 공부를 시작해보세요! </h2>
+   		</div>
+    
+      <!-- 소셜 로그인 -->
+      <div class="text-center">
+      
+        <div class="mb-2">소셜 계정으로 간편 로그인</div>
+        <div class="d-flex justify-content-center gap-5 mb-3">
+          <button class="btn btn-outline-success w-25 me-1 " onclick="alert('네이버 로그인')">N</button>
+<!--      <button class="btn btn-outline-warning w-100 mx-1" onclick="alert('카카오 로그인')">💬</button> -->
+          <button class="btn btn-outline-danger w-25 mx-1" onclick="alert('구글 로그인')">G</button>
+<!--      <button class="btn btn-outline-primary w-100 mx-1" onclick="alert('페이스북 로그인')">f</button> -->
+<!--      <button class="btn btn-outline-dark w-100 ms-1" onclick="alert('애플 로그인')">🍎</button> -->
+        </div>
+      </div>
+      
+      <!-- 경계선 -->
+			<div class="position-relative my-4">
+			  <div class="d-flex align-items-center justify-content-center">
+			    <hr class="flex-grow-1 border-top border-secondary opacity-40">
+			    <span class="mx-3 text-muted bg-white px-2">
+			      AccoLearner 아이디로 로그인
+			    </span>
+			    <hr class="flex-grow-1 border-top border-secondary opacity-40">
+			  </div>
+			</div>
+
       
       <!-- 로그인 폼 -->
       <form action="#" method="post" id="login-form">
@@ -112,24 +145,12 @@
       
       <!-- 아이디/비번 찾기 & 회원가입 -->
       <div class="d-flex justify-content-center mb-3 gap-2">
-        <a href="#" onclick="alert('아이디 찾기 기능')">아이디 찾기</a>
-        <span>|</span>
-        <a href="#" onclick="alert('비밀번호 찾기 기능')">비밀번호 찾기</a>
+        <a href="#" onclick="alert('아이디 찾기 기능')">계정찾기</a>
         <span>|</span>
         <a href="${contextPath }/join" id="join-page" onclick="joinPage()">회원가입</a>
       </div>
       
-      <!-- 소셜 로그인 -->
-      <div class="text-center">
-        <div class="mb-2">소셜 계정으로 간편 로그인</div>
-        <div class="d-flex justify-content-between">
-          <button class="btn btn-outline-success w-100 me-1" onclick="alert('네이버 로그인')">N</button>
-          <button class="btn btn-outline-warning w-100 mx-1" onclick="alert('카카오 로그인')">💬</button>
-          <button class="btn btn-outline-danger w-100 mx-1" onclick="alert('구글 로그인')">G</button>
-<!--      <button class="btn btn-outline-primary w-100 mx-1" onclick="alert('페이스북 로그인')">f</button> -->
-<!--      <button class="btn btn-outline-dark w-100 ms-1" onclick="alert('애플 로그인')">🍎</button> -->
-        </div>
-      </div>
+
       
     </div>
     
@@ -152,4 +173,26 @@ min-height: 100vh -> 해당 영역의 높이를 화면크기의 100%에 맞춘�
 수평 정렬은 justify-content
 수직 정렬은 align-items
 둘다 쓰면 정중앙에 배치 
+
+...
+position-relative					기준 컨테이너 지정
+my-4											위아래 여백
+text-center								텍스트 가운데 정렬
+<hr> + border-top					가로 실선
+opacity-50								회색 선의 투명도 조절
+position-absolute					텍스트를 선 위 중앙에 배치
+top-50 start-50 translate-middle	정확히 중앙 정렬
+bg-white									배경 흰색 (선과 겹치지 않게)
+px-3											좌우 여백
+text-muted								회색 텍스트
+
+...
+
+m	모든 방향 마진
+mt	margin-top (위쪽)
+mb	margin-bottom (아래쪽)
+ms	margin-left (start, 왼쪽)
+me	margin-right (end, 오른쪽)
+mx	margin-left + margin-right (가로)
+my	margin-top + margin-bottom (세로
 -->

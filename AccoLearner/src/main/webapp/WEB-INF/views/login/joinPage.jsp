@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function(){
 	
 	duplicateUserBy(); //중복검사 
 	
-	
+	agreeTerms(); //약관동의 	
 	
 });
 	
@@ -146,6 +146,27 @@ async function duplicateUser(field, value){ //async는 함수선언 앞에
 }
 
 
+/**
+ *  약관동의 체크 함수 
+ */
+function agreeTerms(){
+	
+	let agreeAllChkbox = document.getElementById('agreeAll')
+	let agreeServiceChkbox = document.getElementById('agreeTotalService')
+	let agreePrivacyChkbox = document.getElementById('privacPolicy')
+	
+	document.getElementById('agreeAll').addEventListener('change', function(){
+		alert('체인지');
+		//const checkboxes = document.querySelectAll('.cehckbox-input')
+	})
+	
+	document.querySelectorAll('.checkbox-input')
+	
+	
+	
+	
+}
+
 
 /******************************************************************
  
@@ -192,64 +213,105 @@ input.addEventListener('input', () => {
 <body>
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-	<div class="card p-4" style="max-width: 600px; width: 100%;">
+	<div class="card p-4" style="max-width: 500px; width: 100%;">
 	  <h4 class="text-center mb-4">회원가입</h4>
 	
 	  <form action="${contextPath}/join" method="post">
 	
 	    <!-- 아이디 -->
-	    <div class="input-group form-section">
-	      <span class="input-group-text">아이디</span>
-	      <input type="text" class="form-control" name="username" id="user-id" placeholder="아이디 입력">
-	      <button type="button" class="btn btn-outline-secondary" id="id-dupl-btn">중복확인</button>
+	    <div class="input-group flex-column form-section">
+	   		<label for="user-id " class="form-label">아이디</label>
+	   		<div class="d-flex">
+		      <input type="text" class="form-control" name="username" id="user-id" placeholder="4~15이내로 입력해주세요">
+		      <button type="button" class="btn btn-outline-secondary" id="id-dupl-btn">중복확인</button>
+	   		</div>
 	    </div>
 	
 	    <!-- 비밀번호 -->
-	    <div class="input-group form-section">
-	      <span class="input-group-text">비밀번호</span>
-	      <input type="password" class="form-control" name="password" id="user-password" placeholder="비밀번호 입력">
-	    </div>
-	    <!-- 비밀번호 확인 -->
-	    <div class="input-group form-section">
-	      <span class="input-group-text">비밀번호 확인</span>
-	      <input type="password" class="form-control" id="user-password-confirm" placeholder="비밀번호 입력">
+	    <div class="input-group flex-column form-section">
+	    	<label for="user-password " class="form-label">비밀번호 </label>
+	    	<div class="d-flex">
+		      <input type="password" class="form-control" name="password" id="user-password" placeholder="최소 6자 이(알파벳, 숫자 필수)">
+	    	</div>
 	    </div>
 	
 	    <!-- 이메일 -->
-	    <div class="input-group form-section">
-	      <span class="input-group-text">이메일</span>
-	      <input type="email" class="form-control" name="email" id="user-email" placeholder="example@domain.com">
-	      <button type="button" class="btn btn-outline-secondary" id="email-send-btn">인증코드 전송</button>
+	    <div class="input-group flex-column form-section">
+	    	<label for="user-email " class="form-label">이메일 </label>
+	    	<div class="d-flex">
+		      <input type="email" class="form-control" name="email" id="user-email" placeholder="example@domain.com">
+		      <button type="button" class="btn btn-outline-secondary" id="email-send-btn">인증코드 전송</button>
+	    	</div>
 	    </div>
 	
 	    <!-- 인증번호 -->
-	    <div class="input-group form-section">
-	      <span class="input-group-text">인증번호</span>
-	      <input type="text" class="form-control" id="email-code" placeholder="인증번호 입력">
-	      <button type="button" class="btn btn-outline-success" id="email-confirm-btn">확인</button>
+	    <div class="input-group flex-column form-section">
+	    	<label for="email-code " class="form-label">인증번호</label>
+	      <div class="d-flex">
+		      <input type="text" class="form-control" id="email-code" placeholder="인증번호 입력">
+		      <button type="button" class="btn btn-outline-success" id="email-confirm-btn">확인</button>
+	      </div>
 	    </div>
 	
 	    <!-- 닉네임 -->
-	    <div class="input-group form-section">
-	      <span class="input-group-text">닉네임</span>
-	      <input type="text" class="form-control" name="nickname" id="nickname" placeholder="닉네임 입력">
-	      <button type="button" class="btn btn-outline-secondary" id="nickname-dupl-btn">중복확인</button>
+	    <div class="input-group flex-column form-section">
+	    	<label for="nickname " class="form-label">닉네임</label>
+	    	<div class="d-flex">
+		      <input type="text" class="form-control" name="nickname" id="nickname" placeholder="별명을 알파벳, 한글, 숫자를 20자 이하로 입력해주세요.">
+		      <button type="button" class="btn btn-outline-secondary" id="nickname-dupl-btn">중복확인</button>
+	    	</div>
 	    </div>
 	
-	    <!-- 구독 옵션 -->
-	    <div class="form-section text-center">
-	      <div class="form-check form-check-inline">
-	        <input class="form-check-input" type="checkbox" name="emailSubscribed" id="email-sub">
-	        <label class="form-check-label" for="email_sub">이메일 수신 동의</label>
-	      </div>
-	      <div class="form-check form-check-inline">
-	        <input class="form-check-input" type="checkbox" name="kakaoSubscribed" id="kakao-sub">
-	        <label class="form-check-label" for="kakao_sub">카카오 수신 동의</label>
-	      </div>
+	    <!-- 이메일 구독 옵션 -->
+	    <div class="mt-5">
+	    	<div class="d-flex justify-content-between mt-1 w-100">	
+	    		<div>
+	    			이메일 수신 동의 
+	    		</div>
+			    <div class="form-check form-switch">
+					  <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" name="emailSubscribed">
+					</div>
+	    	</div>
+	    	<small class="text-muted">AccoLearner에서 주최하는 다양한 이벤트, 정보성 뉴스레터 및 광고 수신여부를 설정할 수 있습니다.</small>
 	    </div>
+	    
+	    <!-- 약관동의 -->
+	    <div class="mt-5">
+	    	<div>약관동의</div>
+	    	<div class="d-flex flex-column mt-3"> <!-- 전체  -->
+	    	
+	    		<div class="form-check mt-2 mb-2"> <!-- 전체 -->
+	    			<input class="form-check-input checkbox-input" type="checkbox" id="agreeAll">
+	    			<label class="form-check-label" for="agreeAll">
+	    				<span class="fw-bold">전체동의</span>
+	    				<small class="text-muted">전체동의를 선택하시면 아래의 모든 약관에 동의하게 됩니다.</small>
+	    			</label>
+	    		</div>
+	    		
+	    		<hr class="flex-grow-1 border-top border-secondary opacity-40">
+	    		
+	    		<div class="my-3">
+	    			<div>
+	    				<input class="form-check-input me-1 checkbox-input" type="checkbox" id="agreeTotalService">
+	    					<span>통합 서비스 이용약관</span>
+	    					<a target="_blank" href="/legal/terms" class="">보기</a>
+	    			</div>
+	    			<div class="mt-1">
+	    				<input class="form-check-input me-1 checkbox-input" type="checkbox" id="privacPolicy">
+	    					<span>개인정보 처리방침</span>
+	    					<a target="_blank" href="/legal/privacy" class="">보기</a>
+	    			</div>
+	    		
+	    			<div></div>
+	    		</div>
+	    	</div>
+	    </div>
+	    
 	
 	    <!-- 버튼 -->
+	    <div class="mt-3">
 	      <button type="button" class="btn btn-primary w-100" id="join-btn">회원가입</button>
+	    </div>
 	
 	    </form>
 	  </div>
@@ -263,8 +325,6 @@ w-100 -> width : 100%, 버튼이 부모 컨테이너의 전체 너비를 채우�
 d-felx -> display : flex;, flexbox를 쓰면 내부 요소를 수평, 수직 정렬하거나 간격 조정이 쉬움 
 justify-content-center -> Flexbox 속성 justify-content : center;, 수평 방향 중앙 정렬.. 즉 div안의 자식요소들이 가로 중앙에 모여서 배치됨 
 justify-content-between -> 첫번째 요소는 왼쪽 끝, 마지막 요소는 오른쪽 끝, 나머지는 균등하게 사이 간격 
-justify-content-around -> 좌우 여백이 절반, 사이 여백 균등
-justify-content-evenly -> 좌우 + 사이 여백 모두 균등
 gap-2 -> 요소 사이에 약간의 여백 추가 
 align-items-center -> 일단 Flexbox 레이아웃 안에서만 의미있음, 자식 요소를 수직 중앙 정렬 
 min-height: 100vh -> 해당 영역의 높이를 화면크기의 100%에 맞춘다는 의미. 200을 주면 해당 영역의 높이가 모니터 화면의 두배길이로 설정됨 
@@ -274,4 +334,26 @@ min-height: 100vh -> 해당 영역의 높이를 화면크기의 100%에 맞춘�
 수평 정렬은 justify-content
 수직 정렬은 align-items
 둘다 쓰면 정중앙에 배치 
+
+...
+position-relative					기준 컨테이너 지정
+my-4											위아래 여백
+text-center								텍스트 가운데 정렬
+<hr> + border-top					가로 실선
+opacity-50								회색 선의 투명도 조절
+position-absolute					텍스트를 선 위 중앙에 배치
+top-50 start-50 translate-middle	정확히 중앙 정렬
+bg-white									배경 흰색 (선과 겹치지 않게)
+px-3											좌우 여백
+text-muted								회색 텍스트
+
+...
+
+m	모든 방향 마진
+mt	margin-top (위쪽)
+mb	margin-bottom (아래쪽)
+ms	margin-left (start, 왼쪽)
+me	margin-right (end, 오른쪽)
+mx	margin-left + margin-right (가로)
+my	margin-top + margin-bottom (세로)
 -->

@@ -63,6 +63,19 @@ public class UserController {
   }
   
   /**
+   * 회원가입 시 개인정보 동의 페이지 이동 
+   */
+  @GetMapping("/legal/terms")
+  public String terms() {
+    return "legal/terms";
+  }
+  
+  @GetMapping("/legal/privacy")
+  public String privacy() {
+    return "legal/privacy";
+  }
+  
+  /**
    * 회원탈퇴 (논리적)
    */
   
@@ -84,6 +97,7 @@ public class UserController {
     
     return ResponseEntity.ok(resultMap); //Map.of를 해서 넣어도 되고 
   }
+  
   
   
 }
