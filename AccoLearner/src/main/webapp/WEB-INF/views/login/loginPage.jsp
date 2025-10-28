@@ -18,7 +18,10 @@
 		//로그인 post 비동기 처리 	
 		loginProcess();
 		
-	});
+		//로컬스토리지 저장된 아이디 불러오기 
+		getSavedId();
+		
+	}); //DOMContentLoaded
 	
 	function loginProcess() { 
 		document.getElementById("login-process-btn").addEventListener("click", async () => {
@@ -26,8 +29,15 @@
 		  const password = document.getElementById("login-pwd").value.trim();
 		  const errorDiv = document.getElementById("login-error");
 		  
-		  console.log(username + " / " + password);
+		  //아이디 저장 여부 
+		  let rememberId = document.querySelector('#save-id').checked;
+		  if(rememberId){
+			  localStorage.setItem('rememberId', username);
+		  } else {
+			  localStorage.removeItem('rememberId');
+		  }
 		  
+		  // 로그인 요청 
 		  if(!username||!password){
 			  errorDiv.textContent = "아이디와 비밀번호를 입력해주세요.";
 			  errorDiv.style.display='block';
@@ -70,10 +80,16 @@
 			  errorDiv.textContent ="서버 오류가 발생했습니다.";
 			  errorDiv.style.display = 'block';
 		  }
-		  
-		  
-		
 		});
+	}//loginProcess
+	
+	//저장된 아이디 불러오기 
+	function getSavedId(){
+		const userId = localStorage.getItem('rememberId');
+		if(userId !== null){
+			document.getElementById("login-id").value = userId;
+			document.querySelector('#save-id').checked = true;
+		} 
 	}
 	
 </script>

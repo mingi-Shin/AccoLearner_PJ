@@ -125,7 +125,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
       response.setHeader("Authorization", "Bearer " + accessToken);
       
       // 4. refresh 토큰 -> 쿠키 설정 ("Set-Cookie")
-      ResponseCookie refreshCookie = jwtUtil.createRefreshCookie(refreshToken);
+      ResponseCookie refreshCookie = jwtUtil.createRefreshCookie(refreshToken, 24);
       response.addHeader("Set-Cookie", refreshCookie.toString());
       
       // 5. SecurityContextHolder에 넣기

@@ -25,6 +25,10 @@
 
   <!-- Bootstrap JS (Popper 포함) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- 전역 공통 함수 불러오기  -->
+  <script src="${contextPath}/resources/js/apiFetch.js"></script>
+  
 </head>
 
 <script type="text/javascript">
@@ -33,9 +37,11 @@
 		
 		//로그인 버튼 클릭 페이지 이동
 		const loginBtn = document.getElementById("login-page-btn");
-		loginBtn.addEventListener("click", () => {
-			location.href="/login";
-		});
+		if(loginBtn){
+			loginBtn.addEventListener("click", () => {
+				location.href="/login";
+			});
+		}
 		
 		//로그아웃 버튼 클릭 비동기처리 
 		
@@ -49,6 +55,11 @@
 		document.getElementById('logout').addEventListener('click', () => {
 			
 			//예시
+			
+			
+			alert('로그아웃');
+		});
+	}
 <!--			const token = localStorage.getItem("accessToken");
 	    fetch("/api/logout", {
 	        method: "POST",
@@ -60,11 +71,8 @@
 	        localStorage.removeItem("accessToken");
 	        localStorage.removeItem("refreshToken");
 	        location.href = "/";
-	    });-->
-			
-			alert('로그아웃');
-		});
-	}
+	    });
+-->
 
 </script>
 

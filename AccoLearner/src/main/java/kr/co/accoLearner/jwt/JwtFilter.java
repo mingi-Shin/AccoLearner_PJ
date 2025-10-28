@@ -184,7 +184,7 @@ public class JwtFilter extends OncePerRequestFilter {
   private void afterLoginAddAuthentication(String refreshToken) {
     
     UserDTO userVo = new UserDTO();
-    userVo.setUserIdx(Long.parseLong(jwtUtil.getUserIdx(refreshToken)));
+    userVo.setUserIdx(Long.parseLong(jwtUtil.getUserIdx(refreshToken))); // String -> Long 형변환 주의 
     userVo.setEmail(jwtUtil.getEmail(refreshToken));
     userVo.setNickname(jwtUtil.getNickname(refreshToken));
     userVo.setRole(Role.valueOf(jwtUtil.getRole(refreshToken)));

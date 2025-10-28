@@ -59,14 +59,13 @@ function joinUser(){
 		const password = document.getElementById("user-password").value;
 		const nickname = document.getElementById("nickname").value;
 		const email = document.getElementById("user-email").value;
-		const emailSubscribed = document.getElementById("email-sub").checked;
-		const kakaoSubscribed = document.getElementById("kakao-sub").checked;
+		const emailSubscribed = document.getElementById("switchCheckDefault").checked;
 		
 		try {
 			const response = await fetch("/api/join", {
 				method : "POST",
 				headers : {"Content-Type": "application/json"},
-				body : JSON.stringify({loginId, password, nickname, email, emailSubscribed, kakaoSubscribed})
+				body : JSON.stringify({loginId, password, nickname, email, emailSubscribed})
 			});
 			
 /* 	서버에 요청을 보내면 HTTP응답 전체 정보(헤더, 상태코드, 바디 등)을 담고있는 Response 객체로 반환돼요.

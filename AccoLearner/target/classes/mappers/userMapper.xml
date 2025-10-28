@@ -9,8 +9,8 @@
   <!-- 회원가입 -->
   <!-- PostgreSQL의 BIGSERIAL은 자동 증가이므로, user_idx를 insert 후에 받아오고싶다면 아래처럼 설정 -->
   <insert id="insertUser" parameterType="kr.co.accoLearner.dto.UserDTO" useGeneratedKeys="true" keyProperty="userIdx" keyColumn="user_idx">  	
-  	INSERT INTO users (login_id, password, nickname, email, email_subscribed, kakao_subscribed) 
-		VALUES (#{loginId}, #{password}, #{nickname}, #{email}, #{emailSubscribed}, #{kakaoSubscribed})
+  	INSERT INTO users (login_id, password, nickname, email, email_subscribed) 
+		VALUES (#{loginId}, #{password}, #{nickname}, #{email}, #{emailSubscribed})
   </insert>
   
   <!-- 회원탈퇴:논리적 -->
@@ -43,5 +43,22 @@
   <select id="SelectUserByUsername" parameterType="string" resultType="kr.co.accoLearner.dto.UserDTO">
 		SELECT * FROM users WHERE login_id = #{username}  
   </select>
+
+
+  <!-- Refresh 토큰 가져오기 -->
+  <select id="selectRefreshToken" parameterType="map" resultType="kr.co.accoLearner.dto.JwtRefreshDTO">
+		SELECT * FROM users WHERE login_id = #{username} AND refresh_token = ${refreshToken}  
+  </select>
+  
+  <!-- Refresh 토큰 DB 저장 -->
+  <insert id="insertRefreshToken" parameterType="map">
+  	INSERT INTO jwt_refresh(user_idx, refresh_token, created_at, expires_at)
+  	VALUES (#{userIdx}, #{refreshToken}, #{createdAt}, #{expiresAt})
+  </insert>
+  
+  <!-- Refresh 토큰 DB 업데이트 : 무효화 처리 -->
+  <update id="updateRefreshToken" parameterType="map">
+  	UPDATE jwt_refresh SET is_active = 'N' WHERE user_idx = #{userIdx} AND refresh_token = #{refreshToken}
+  </update>
   
 </mapper>

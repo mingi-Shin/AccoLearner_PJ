@@ -2,10 +2,12 @@ package kr.co.accoLearner.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import kr.co.accoLearner.dto.JwtRefreshDTO;
 import kr.co.accoLearner.dto.UserDTO;
+import kr.co.accoLearner.mapper.UserMapper;
 import kr.co.accoLearner.service.UserService;
 
 @Controller
@@ -106,6 +110,32 @@ public class UserController {
     resultMap.put("isDuplicated", result);
     
     return ResponseEntity.ok(resultMap); //Map.of를 해서 넣어도 되고 
+  }
+  
+  
+  /**
+   *  Jwt Refresh 토큰 조회 
+   */
+  @GetMapping("/api/refresh")
+  public ResponseEntity<?> getRefreshToken(@RequestBody Map<String, Object> requestBody){ // <?> = return 타입 분기화
+    
+    Long userIdx = (Long) requestBody.get("username");
+    String refreshToken = (String) requestBody.get("refreshToken");
+    
+    Optional<JwtRefreshDTO> refreshDTO = userService.getRefreshToken(userIdx, refreshToken);
+    
+    if(refreshDTO.isEmpty()) {
+      //토큰이 없거나 유효하지 않음 
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+          .body("Refresh token not found or expired");
+    }
+    
+    //유효값이 존재 
+    JwtRefreshDTO dto = refreshDTO.get();
+    
+    //서비스 이어서...
+    
+    return ResponseEntity.ok(Map.of("success", "조회성공, refresh 존재 "));
   }
   
   

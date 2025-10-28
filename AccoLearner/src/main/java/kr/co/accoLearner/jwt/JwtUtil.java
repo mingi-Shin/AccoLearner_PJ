@@ -186,13 +186,13 @@ public class JwtUtil {
   /**
    * Refresh 토큰 HttpOnly 쿠키 생성 메서드
    */
-  public ResponseCookie createRefreshCookie(String refreshToken) {
+  public ResponseCookie createRefreshCookie(String refreshToken, int time) {
     return ResponseCookie.from("refresh", refreshToken)
         .httpOnly(true) // js에서 쿠키 접근 불가
         .secure(false) // 개발환경 : false, 운영환경 : ture
         .sameSite("Lax") // CSRF방지 (Lax : 크로스사이트 GET 요청만 허용, 보안성은 Strict가 더 높음)
         .path("/")
-        .maxAge(Duration.ofHours(24))
+        .maxAge(Duration.ofHours(time))
         .build();
   }
   

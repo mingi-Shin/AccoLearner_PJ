@@ -6,6 +6,7 @@
     xmlns:tx="http://www.springframework.org/schema/tx"
     xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
     xmlns:security="http://www.springframework.org/schema/security"
+    xmlns:task="http://www.springframework.org/schema/task"
     xsi:schemaLocation="
         http://www.springframework.org/schema/beans 
         https://www.springframework.org/schema/beans/spring-beans.xsd
@@ -16,7 +17,9 @@
         http://mybatis.org/schema/mybatis-spring 
         https://mybatis.org/schema/mybatis-spring.xsd
         http://www.springframework.org/schema/security
-        http://www.springframework.org/schema/security/spring-security.xsd">
+        http://www.springframework.org/schema/security/spring-security.xsd
+        http://www.springframework.org/schema/task
+				https://www.springframework.org/schema/task/spring-task.xsd">
 
     <!-- Component Scan (Service, Repository, Component), kr.co 로 해줘야 하위 패키지를 모두 스캔해서bean등록한다. -->
     <context:component-scan base-package="kr.co.accoLearner"> 
@@ -83,9 +86,14 @@
 
 		<!-- API 키 보관 properties 등록 : @Value로 읽기위해서 -->
 		<context:property-placeholder location="classpath:api-config.properties"/>
-		
 
     <!-- 스케줄러 활성화 (필요시) -->
-    <!-- <task:annotation-driven/> -->
-
+    <task:annotation-driven/>
+		<!-- JdbcTemplate 등록 -->
+		<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		    <constructor-arg ref="dataSource"/>
+		</bean>
+		
+		
+		
 </beans>
