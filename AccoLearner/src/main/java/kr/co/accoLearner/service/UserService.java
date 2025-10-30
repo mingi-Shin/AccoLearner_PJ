@@ -29,21 +29,21 @@ public class UserService {
   
   /**
    * 회원가입
-   * userIdx 가져옴 (= mapper의 useGeneratedKeys="true" 설정)
+   * userSeq 가져옴 (= mapper의 useGeneratedKeys="true" 설정)
    */
   public Long registerUser(UserDTO user) {
     String encodedPwd = passwordEncoder.encode(user.getPassword());
     user.setPassword(encodedPwd);
     userMapper.insertUser(user);
     //insert가 끝나면 user 객체 안에 자동으로 user_idx가 들어있음.
-    return user.getUserIdx();
+    return user.getUserSeq();
   }
   
   /**
    * 회원탈퇴 (상태값 = DELETED)
    */
-  public int deleteUser(Long userIdx) {
-    int result = userMapper.deleteUser(userIdx);
+  public int deleteUser(Long userSeq) {
+    int result = userMapper.deleteUser(userSeq);
     return result;
   }
   
@@ -67,10 +67,10 @@ public class UserService {
    * Refresh 토큰 조회 : 보안용 / 다중접속 프로젝트라서 refreshToken도 매개변수로 줘야함 
    * NullPointerException 처리 -> Optional 사용 
    */
-  public Optional<JwtRefreshDTO> getRefreshToken(Long userIdx, String refreshToken) {
+  public Optional<JwtRefreshDTO> getRefreshToken(Long userSeq, String refreshToken) {
     
     Map<String, Object> param = new HashMap<String, Object>();
-    param.put("userIdx", userIdx);
+    param.put("userSeq", userSeq);
     param.put("refreshToken", refreshToken);
     
     JwtRefreshDTO jwtRefreshDTO = userMapper.selectRefreshToken(param);
@@ -83,10 +83,10 @@ public class UserService {
   /**
    * Refresh 토큰 생성 
    */
-  public boolean newRefreshToken(Long userIdx, String refreshToken, LocalDateTime createdAt, LocalDateTime expiresAt) {
+  public boolean newRefreshToken(Long userSeq, String refreshToken, LocalDateTime createdAt, LocalDateTime expiresAt) {
     
     Map<String, Object> param = new HashMap<String, Object>();
-    param.put("userIdx", userIdx);
+    param.put("userSeq", userSeq);
     param.put("refreshToken", refreshToken);
     param.put("createdAt", createdAt);
     param.put("expiresAt", expiresAt);
@@ -99,11 +99,7 @@ public class UserService {
   /**
    * Refresh 토큰 무효화 업데이트 
    */
-  public boolean deleteRefreshToken(Long userIdx) {
-    
-    
-    
-  }
+  
   
 
 }

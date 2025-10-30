@@ -156,7 +156,7 @@ public class JwtFilter extends OncePerRequestFilter {
     
     // 1. 토큰정보로 userDTO 생성
     UserDTO userVo = new UserDTO();
-    userVo.setUserIdx(Long.parseLong(jwtUtil.getUserIdx(accessToken)));
+    userVo.setUserSeq(Long.parseLong(jwtUtil.getUserSeq(accessToken)));
     userVo.setEmail(jwtUtil.getEmail(accessToken));
     userVo.setNickname(jwtUtil.getNickname(accessToken));
     userVo.setRole(Role.valueOf(jwtUtil.getRole(accessToken)));
@@ -184,7 +184,7 @@ public class JwtFilter extends OncePerRequestFilter {
   private void afterLoginAddAuthentication(String refreshToken) {
     
     UserDTO userVo = new UserDTO();
-    userVo.setUserIdx(Long.parseLong(jwtUtil.getUserIdx(refreshToken))); // String -> Long 형변환 주의 
+    userVo.setUserSeq(Long.parseLong(jwtUtil.getUserSeq(refreshToken))); // String -> Long 형변환 주의 
     userVo.setEmail(jwtUtil.getEmail(refreshToken));
     userVo.setNickname(jwtUtil.getNickname(refreshToken));
     userVo.setRole(Role.valueOf(jwtUtil.getRole(refreshToken)));

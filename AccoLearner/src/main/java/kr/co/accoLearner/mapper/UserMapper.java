@@ -14,7 +14,7 @@ public interface UserMapper {
   public int insertUser(UserDTO userDto);
   
   //회원탈퇴
-  public int deleteUser(Long userIdx);
+  public int deleteUser(Long userSeq);
   
   //로그인
   public UserDTO SelectUserByUsername(String username);
@@ -28,7 +28,7 @@ public interface UserMapper {
   //Refresh 토큰 생성 
   public int insertRefreshToken(Map<String, Object> param);
   
-  //Refresh 토큰 업데이트 : 무효화 
+  //Refresh 토큰 업데이트 : 무효화
   public int updateRefreshToken(Map<String, Object> param);
   
   //Refresh 토큰 물리적 삭제 -> 어플리케이션 배치 실행 중 

@@ -39,15 +39,6 @@ public class UserController {
     return "login/loginPage";
   }
   
-  //로그아웃 
-  @PostMapping("/logout")
-  public ResponseEntity<Void> logout() { //<body에 들어갈 실제 응답 데이터 타입> : Void는 body에 내용 없음을 의미 
-    
-    //서버에서 로그아웃 처리 
-    //DB에 저장된 해당 유저의 refresh 토큰 무효화 처리 (access 토큰검증 -> 무효화)
-    
-    return ResponseEntity.noContent().build(); //body 없음 
-  }
   
   //회원가입 페이지 이동
   @GetMapping("/join")

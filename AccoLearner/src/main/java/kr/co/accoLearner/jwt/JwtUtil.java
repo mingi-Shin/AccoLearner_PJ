@@ -58,7 +58,7 @@ public class JwtUtil {
     try {
       return Jwts.builder()
           .claim("category", category)
-          .claim("userIdx", String.valueOf( user.getUserIdx()))
+          .claim("userSeq", String.valueOf( user.getUserSeq()))
           .claim("nickname", user.getNickname())
           .claim("email", user.getEmail())
           .claim("role", user.getRole())
@@ -99,14 +99,14 @@ public class JwtUtil {
     }
   }
   
-  public String getUserIdx(String token) {
+  public String getUserSeq(String token) {
     try {
       return Jwts.parser() 
           .verifyWith(secretKey) 
           .build() 
           .parseSignedClaims(token) 
           .getPayload() 
-          .get("userIdx", String.class); 
+          .get("userSeq", String.class); 
     } catch (JwtException e) {
       e.printStackTrace();
       throw new IllegalArgumentException("Invalid JWT Token", e);

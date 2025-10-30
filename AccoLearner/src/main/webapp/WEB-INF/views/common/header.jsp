@@ -44,35 +44,36 @@
 		}
 		
 		//로그아웃 버튼 클릭 비동기처리 
-		
+		logout();
 		
 		
 		
 	});
 
 	
-	function logout(){
-		document.getElementById('logout').addEventListener('click', () => {
-			
-			//예시
-			
-			
-			alert('로그아웃');
-		});
-	}
-<!--			const token = localStorage.getItem("accessToken");
-	    fetch("/api/logout", {
-	        method: "POST",
-	        headers: {
-	            "Authorization": "Bearer " + token,
-	            "Content-Type": "application/json"
-	        }
-	    }).finally(() => {
-	        localStorage.removeItem("accessToken");
-	        localStorage.removeItem("refreshToken");
-	        location.href = "/";
-	    });
--->
+function logout(){
+	document.getElementById('logout').addEventListener('click', async () => {
+		
+		const accessToken = localStorage.getItem("accessToken");
+		
+		
+		try {
+			await fetch("/api/logout", {
+				method : "POST",
+				headers : {
+					"Content-Type" : "application/json",
+					"Authorization" : "Bearer " + accessToken
+				},
+			})
+		} catch (error) {
+			console.error("로그아웃 에러:", error);
+     	alert("로그아웃 통신 중 오류가 발생했습니다.");
+		} finally {
+			localStorage.removeItem("accessToken");
+			location.href = "/";
+		}
+	});
+}
 
 </script>
 
@@ -94,10 +95,7 @@
             <a class="nav-link" href="#">소개</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
-             	학습하기
-            </a>
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">학습하기 </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="#">Action</a></li>
               <li><a class="dropdown-item" href="#">Another action</a></li>
@@ -105,8 +103,15 @@
               <li><a class="dropdown-item" href="#">Something else here</a></li>
             </ul>
           </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-disabled="true" href="/community">커뮤니티</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">커뮤니티 </a>
+            <ul class="dropdown-menu">
+            	<li><a class="dropdown-item" href="#"> 공지사항 </a></li>
+              <li><hr class="dropdown-divider"></li>
+            	<li><a class="dropdown-item" href="#"> 데일리 퀴즈 </a></li>
+              <li><hr class="dropdown-divider"></li>
+            	<li><a class="dropdown-item" href="#"> 자유게시판 </a></li>
+            </ul>
           </li>
           <li class="nav-item">
             <a class="nav-link disabled" aria-disabled="true">|</a>
@@ -144,9 +149,12 @@
 		            	<security:authorize access="hasRole('USER')">
 		            		<li><security:authentication property="principal.email"/> </li>
 		            	</security:authorize>
+		            	<security:authorize access="hasRole('ADMIN')">
+		            		<li><security:authentication property="principal.authorities"/> </li>
+		            	</security:authorize>
               		<li><a class="dropdown-item" href="#">마이페이지 </a></li>
               		<li><hr class="dropdown-divider"></li>
-              		<li><a class="dropdown-item" id="logout">로그아웃</a></li>
+              		<li><a class="dropdown-item" id="logout" role="button">로그아웃</a></li>
             		</ul>
           		</div>
           	</security:authorize>

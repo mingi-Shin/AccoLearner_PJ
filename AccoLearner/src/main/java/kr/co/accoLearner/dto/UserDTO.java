@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserDTO {
 
-  private Long userIdx;
+  private Long userSeq;
   private LocalDateTime createdAt;
   private String loginId;
   private String password;

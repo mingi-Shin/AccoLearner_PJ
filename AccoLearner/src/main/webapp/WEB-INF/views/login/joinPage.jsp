@@ -106,10 +106,13 @@ function duplicateUserBy(){
 	});
 	
 	//-------이메일 중복검사는 input이벤트로 처리 + debounce ------
+	let timer;
 	document.getElementById('user-email').addEventListener('input', function(){
-		let userEmail = document.getElementById('user-email').value;
-		duplicateUser('nickname', userEmail);
-		
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			let userEmail = document.getElementById('user-email').value;
+			duplicateUser('email', userEmail);
+		}, 1500);
 	});
 	
 	
@@ -117,7 +120,7 @@ function duplicateUserBy(){
 async function duplicateUser(field, value){ //async는 함수선언 앞에 
 	
 	if(value == null || value.trim() === ""){
-		alert(" 빈칸입니다.");
+		alert("값을 입려해주세요 ");
 		return;
 	}
 	

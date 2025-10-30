@@ -6,6 +6,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+/**
+ *  리프레시 토큰 삭제 프로시저 
+ */
 @Component
 public class TokenCleanScheduler {
 
