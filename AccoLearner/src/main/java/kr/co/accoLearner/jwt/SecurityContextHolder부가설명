@@ -30,4 +30,13 @@ JWT방식은 ThreadLocal에만 저장되고, 세션(HttpSession)에는 저장하
 
 -------------------------------------------------------------
 Spring Security는 AuthenticationManager → AuthenticationProvider → UserDetailsService를 거쳐 인증 시 UserDetails를 사용
+인증성 -> successfulAuthentication() 호출 or	 인증 실패 -> unsuccessfulAuthentication() 호출
 (참고로, UserDetails userDetails = userDetailsService.loadUserByUsername("mingi"); 를 거침) 
+-------------------------------------------------------------
+
+successfulAuthentication()은 UsernamePasswordAuthenticationFilter의 콜백 메서드입니다.
+즉,
+로그인 인증이 AuthenticationManager를 통해 성공한 직후, Spring Security가 자동으로 호출하는 메서드
+즉,
+부모 클래스인 AbstractAuthenticationProcessingFilter 내부에서 이미 SecurityContextHolder에 인증 객체를 넣는 로직이 존재
+

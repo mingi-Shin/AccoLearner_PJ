@@ -51,8 +51,8 @@
   
   <!-- Refresh 토큰 DB 저장 -->
   <insert id="insertRefreshToken" parameterType="map">
-  	INSERT INTO jwt_refresh(user_seq, refresh_token, created_at, expires_at)
-  	VALUES (#{userSeq}, #{refreshToken}, #{createdAt}, #{expiresAt})
+  	INSERT INTO jwt_refresh(user_seq, refresh_token, expires_at)
+  	VALUES (#{userSeq}, #{refreshToken}, #{expiresAt})
   </insert>
   
   <!-- Refresh 토큰 DB 업데이트 : 무효화 처리 -->

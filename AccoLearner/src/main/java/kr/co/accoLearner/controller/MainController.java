@@ -55,8 +55,6 @@ public class MainController {
       
       boolean result = mainService.logout(userSeq, refreshToken);
       
-      
-      
       logger.info("로그아웃 성공? : {}", result );
       
     } else {

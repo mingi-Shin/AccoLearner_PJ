@@ -62,7 +62,7 @@ function logout(){
 				method : "POST",
 				headers : {
 					"Content-Type" : "application/json",
-					"Authorization" : "Bearer " + accessToken
+					"Authorization" : "Bearer " + accessToken // RFC표준을 지키기
 				},
 			})
 		} catch (error) {
@@ -70,6 +70,7 @@ function logout(){
      	alert("로그아웃 통신 중 오류가 발생했습니다.");
 		} finally {
 			localStorage.removeItem("accessToken");
+			alert("정상적으로 로그아웃 되었습니다.");
 			location.href = "/";
 		}
 	});

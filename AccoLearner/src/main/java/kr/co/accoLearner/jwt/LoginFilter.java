@@ -67,7 +67,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     }
     
     try {
-      //JSON 파싱 = .getInputStream() -> HTTP요청 바디 읽기 / .readValue() -> JSON을 Java객체(LoginRequest)로 변환
+      //JSON 파싱 = .getInputStream() -> HTTP요청 바디 읽기 // .readValue() -> JSON을 Java객체(LoginRequest)로 변환
       LoginRequestDTO loginRequestVO = objectMapper.readValue(request.getInputStream(), LoginRequestDTO.class);
       logger.info("로그인 시도 아이디 : {}", loginRequestVO.getUsername());
       
@@ -82,7 +82,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
    // 1. AuthenticationManager의 authenticate()에 로그인 토큰(authToken)을 전달
    // 2. 내부의 AuthenticationProvider가 아이디/비밀번호 검증 수행
-   //    -- 자세히 : UserDetailsService.loadUserByUsername() 호출하여 검증 
+   //    -- 자세히 : UserDetailsService.loadUserByUsername() 호출하여 검증 --
    // 3. 성공 시 → 사용자정보(UserDetails)가 담긴 Authentication 객체 리턴
    //    실패 시 → AuthenticationException 발생 (return 없음)
    // 4. Authentication은 principal(사용자정보 : UserDetails 타입), credentials(비번/null), authorities(권한), authenticated(boolean) 등으로 구성
@@ -111,6 +111,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
       FilterChain chain, Authentication authResult) throws IOException, ServletException {
   
     logger.info("=== JWT 로그인 성공 ===");
+    // 부모 클래스에서, 이미 SecurityContextHolder에 authResult를 넣었음. 아래는 내가 나머지를 커스텀하는 것뿐
     
     try {
       // 1. JWT 생성을 위해, 사용자 정보 추출 
@@ -128,7 +129,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
       ResponseCookie refreshCookie = jwtUtil.createRefreshCookie(refreshToken, 24);
       response.addHeader("Set-Cookie", refreshCookie.toString());
       
-      // 5. SecurityContextHolder에 넣기
+      // 5. SecurityContextHolder에 넣기 -> !! SecurityContextHolder 설정은 이미 상위 필터가 처리한 상태 !!
       //SecurityContextHolder.getContext().setAuthentication(authResult);
       
       // 6. (Option) 성공 응답 객체 생성
