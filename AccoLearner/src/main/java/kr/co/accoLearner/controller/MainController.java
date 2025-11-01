@@ -42,7 +42,7 @@ public class MainController {
    * 로그아웃
    * @return
    */
-  @PostMapping("/api/logout")
+  @PostMapping("/api/auth/logout")
   public ResponseEntity<Void> logout(HttpServletRequest request) { //<body에 들어갈 실제 응답 데이터 타입> : Void는 body에 내용 없음을 의미 
     String requestHeader = request.getHeader("Authorization");
 

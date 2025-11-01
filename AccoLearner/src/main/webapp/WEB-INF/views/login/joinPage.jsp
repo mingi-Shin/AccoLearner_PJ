@@ -125,8 +125,8 @@ async function duplicateUser(field, value){ //async는 함수선언 앞에
 	}
 	
 	try {
-		const response = await fetch('/api/user/duplicate', {
-			method : "POST",
+		const response = await fetch('/api/join/userInfo', {
+			method : "GET",
 			headers : {"Content-Type" : "application/json"},
 			body : JSON.stringify({ "checkField": field,  "checkValue" : value}) //JS객체 -> JSON문자열로 변환 
 		});	
@@ -227,8 +227,9 @@ input.addEventListener('input', () => {
 	<div class="mx-auto" style="width: 80%;">
 		<jsp:include page="/WEB-INF/views/common/header.jsp" />
 	</div>
+	
 	<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-		<div class="card p-4" style="max-width: 500px; width: 100%;">
+		<div class="card p-4" style="max-width: 500px; width: 100%; margin-top: 80px;">
 		  <h4 class="text-center mb-4">회원가입</h4>
 		
 		  <form action="${contextPath}/join" method="post">

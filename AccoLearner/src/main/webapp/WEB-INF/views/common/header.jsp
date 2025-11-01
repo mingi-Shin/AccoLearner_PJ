@@ -23,6 +23,9 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
+	<!-- Bootstrap Imoji -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+	
   <!-- Bootstrap JS (Popper 포함) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   
@@ -58,7 +61,7 @@ function logout(){
 		
 		
 		try {
-			await fetch("/api/logout", {
+			await fetch("/api/auth/logout", {
 				method : "POST",
 				headers : {
 					"Content-Type" : "application/json",
@@ -107,11 +110,19 @@ function logout(){
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">커뮤니티 </a>
             <ul class="dropdown-menu">
-            	<li><a class="dropdown-item" href="#"> 공지사항 </a></li>
+            	<li>
+            		<a class="dropdown-item" role="button" href="/board/notice">
+	            		공지사항 <span class="badge text-bg-secondary">1</span>
+            		</a> 
+            	</li>
               <li><hr class="dropdown-divider"></li>
-            	<li><a class="dropdown-item" href="#"> 데일리 퀴즈 </a></li>
+            	<li><a class="dropdown-item" href="/board/dailyQuize"> 데일리 퀴즈 </a></li>
               <li><hr class="dropdown-divider"></li>
-            	<li><a class="dropdown-item" href="#"> 자유게시판 </a></li>
+            	<li>
+            		<a class="dropdown-item" href="/board/community"> 
+            		자유게시판 <span class="badge text-bg-secondary">5</span>
+            		</a>
+            	</li>
             </ul>
           </li>
           <li class="nav-item">

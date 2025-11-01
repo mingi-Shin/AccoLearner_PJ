@@ -2,6 +2,7 @@ package kr.co.accoLearner.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -76,6 +77,19 @@ public class SecurityConfig {
   		.authorizeHttpRequests(auth -> auth
   			//극초반에는 모두 오픈하고 개발
       	.requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
+      	
+      	/**
+      	 * hasRole은 내부적으로 ROLE_을 붙여서 비교한다. SecurityContextHolder에 ROLE_이 붙여 있어야 매치 가능 
+      	 */
+      	//.requestMatchers("/api/join/**", ).permitAll() //회원가입 공개 API
+      	//.requestMatchers("/api/user/**").authenticated() //로그인 후 API
+      	//.requestMatchers("/api/admin/**").hasRole("ADMIN") //관리자만 api 요청 가능 
+      	//.requestMatchers("/admin/**").hasRole("ADMIN") // 관리자만 접근 가능  
+      	//.requestMatchers("/user/**").authenticated() //로그인 유저만 접근 가능 
+      	
+      	//.requestMatchers(HttpMethod.GET, "/board/notice").permitAll()
+      	//.requestMatchers(HttpMethod.POST, "/board/notice").hasRole("ADMIN")
+      	//.anyRequest().authenticated() //다른 요청 모두 로그인 필요 
       	
 			)
   		

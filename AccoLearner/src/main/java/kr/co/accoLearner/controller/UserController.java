@@ -89,15 +89,16 @@ public class UserController {
    * 회원 정보 중복 체크  (loginId, email, nickname)
    * body에 담긴 값이 단일이면 String 가능, 하지만 n개면 Map or DTO 사용 (스프링이 JSON을 Map, DTO로 자동변환해줌)
    */
-  @PostMapping("/api/user/duplicate")
-  public ResponseEntity<Map<String, Object>> duplicateUser(@RequestBody Map<String, Object> requestBody){
+  @GetMapping("/api/join/userInfo")
+  //public ResponseEntity<Map<String, Object>> duplicateUser(@RequestBody Map<String, Object> requestBody){
+  public ResponseEntity<Map<String, Object>> duplicateUser(@RequestParam String checkField, @RequestParam String checkValue){
     
-    String checkField = (String)requestBody.get("checkField");
-    String checkValue = (String)requestBody.get("checkValue");
+    //String checkField = (String)requestBody.get("checkField");
+    //String checkValue = (String)requestBody.get("checkValue");
 
-    Map<String, Object> resultMap = new HashMap<String, Object>();
     boolean result = userService.duplicateUserBy(checkField, checkValue);
     
+    Map<String, Object> resultMap = new HashMap<String, Object>();
     resultMap.put("isDuplicated", result);
     
     return ResponseEntity.ok(resultMap); //Map.of를 해서 넣어도 되고 
@@ -105,9 +106,9 @@ public class UserController {
   
   
   /**
-   *  Jwt Refresh 토큰 조회 
+   *  Jwt Refresh 토큰 조회 : ??????????????? 뜯어고쳐야함 
    */
-  @GetMapping("/api/refresh")
+  @GetMapping("/api/user/refreshToken") 
   public ResponseEntity<?> getRefreshToken(@RequestBody Map<String, Object> requestBody){ // <?> = return 타입 분기화
     
     Long userIdx = (Long) requestBody.get("username");
